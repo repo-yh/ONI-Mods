@@ -1,4 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
+﻿# This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
@@ -51,13 +51,14 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Release]
+        configuration: [CI]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
+    outputs:
+      output1: ${{ steps.artifact-upload-step.outputs.artifact-id }}
     env:
-      Solution_Name: crazyxyr_mod                       # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: ONI-Mods.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
 
     steps:
     - name: Checkout
@@ -75,19 +76,67 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
+    - name: Cache mod
+      id: cache-mod
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-mod
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ./Distribute
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.ref_name }}
+        restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+    - if: ${{ steps.cache-mod.outputs.cache-hit != 'true' }}
+      name: Restore the application
+      run: |
+          cd ${{ github.workspace }}
+          msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Build the application
-      run: msbuild /t:Rebuild /p:Configuration=Release
+    - if: ${{ steps.cache-mod.outputs.cache-hit != 'true' }}
+      name: Build the application
+      run: |
+        cd ${{ github.workspace }}
+        ls lib/
+        msbuild $env:Solution_Name /t:Rebuild /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
+      id: artifact-upload-step
       with:
-        name: zip Package
-        path: ${{ github.workspace }}/Distribute/*.zip
+        name: ONI-Mod-${{ github.ref_name }}
+        path: ${{ github.workspace }}/Distribute
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    permissions:
+      contents: write
+    steps:
+    # ✅ 下载 artifact（自动从 build job 传过来）
+    - name: Download Artifact
+      uses: actions/download-artifact@v8
+      with:
+        artifact-ids: ${{ needs.build.outputs.output1 }}
+        path: ./release
+
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v3
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        files: ./release/**/*
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
