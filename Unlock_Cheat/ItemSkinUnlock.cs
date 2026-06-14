@@ -59,6 +59,9 @@ namespace Unlock_Cheat.ItemSkinUnlock
                         __result = KleiInventoryScreen.PermitPrintabilityState.TooExpensive;
                         return;
                     }
+                    __result = KleiInventoryScreen.PermitPrintabilityState.Printable;
+                    return;
+
                 }
             }
         }
