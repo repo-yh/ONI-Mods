@@ -62,6 +62,7 @@ namespace Unlock_Cheat
                     if (Options.MutantPlant_SelfHarvest) ManualPatch.ManualPatch_NS("Unlock_Cheat.MutantPlants.SelfHarvestPatch");
                     if (DlcManager.IsContentSubscribed("DLC4_ID")) ManualPatch.ManualPatch_NS("Unlock_Cheat.MissileLongRange");
                     if (Options.HighEnergyParticle) ManualPatch.ManualPatch_NS("Unlock_Cheat.HighEnergyParticle_Patch");
+                    if (Options.RocketTile_Deconstruction) ManualPatch.ManualPatch_NS("Unlock_Cheat.RocketTile");
                     ManualPatch.ManualPatch_NS("Unlock_Cheat.BasicRadPill");
                     ManualPatch.ManualPatch_NS("Unlock_Cheat.Harvest");
 

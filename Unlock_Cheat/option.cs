@@ -64,18 +64,18 @@ namespace Unlock_Cheat
         public bool MutantPlant_SelfHarvest { get; set; }
 
         [JsonProperty]
-        [Option("太空挖矿倍率", "用更少的钻石挖更多的矿", "太空挖矿")]
+        [Option("太空挖矿倍率(游戏默认1)", "用更少的钻石挖更多的矿", "太空挖矿")]
         [Limit(1f,1000f)]
         [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
 
-        public float Harvest_mult { get; set; }
+        public float Harvest_mult { get; set; } = 1f;
 
         [JsonProperty]
-        [Option("火箭货仓容量修改", "挖矿效率提高应该搭配更大的货仓,装卸端口也会同步提高", "太空挖矿")]
+        [Option("火箭货仓容量修改(游戏默认1)", "挖矿效率提高应该搭配更大的货仓,装卸端口也会同步提高", "太空挖矿")]
         [Limit(1f, 1000f)]
         [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
 
-        public float Harvest_storage_mult { get; set; }
+        public float Harvest_storage_mult { get; set; } = 1f;
 
         [JsonProperty]
         [Option("火箭端口固体卸载器修改", "装卸器轨道绿口应该以单个物质总质量输出，而不是20kg分片，否则会很长一段时间都在卸载货物", "太空挖矿")]
@@ -83,25 +83,30 @@ namespace Unlock_Cheat
         public bool Harvest_SolidConduitDispenser_Patched { get; set; }
 
         [JsonProperty]
-        [Option("太空矿物质量修改", "挖矿效率提高应该搭配更大的矿物", "太空挖矿")]
+        [Option("太空矿物质量修改(游戏默认1)", "挖矿效率提高应该搭配更大的矿物POI", "太空挖矿")]
         [Limit(1f, 1000f)]
         [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
 
-        public float Harvest_poi_mult { get; set; }
+        public float Harvest_poi_mult { get; set; } = 1f;
 
         [JsonProperty]
         [Option("伤害修改", "单发火箭伤害", "宇宙内爆破弹")]
         [Limit(0, 1000)]
         [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
 
-        public int MissileLongRange_damage { get; set; }
+        public int MissileLongRange_damage { get; set; } = 10;
 
 
         [JsonProperty]
-        [Option("基础辐射药丸", "基础辐射药丸施用的最低辐射值", null)]
+        [Option("基础辐射药丸", "基础辐射药丸施用的最低辐射值(游戏默认0)", null)]
         [Limit(0, 100)]
         [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
-        public float BasicRadPill_MinRAD { get; set; }
+        public float BasicRadPill_MinRAD { get; set; } = 0f;
+
+        [JsonProperty]
+        [Option("火箭舱墙壁可拆除", "火箭舱墙壁可以被拆除", null)]
+        [RequireDLCAttribute(DlcManager.EXPANSION1_ID)]
+        public bool RocketTile_Deconstruction { get; set; } = false;
 
         [JsonProperty]
         [Option("擦拭", "擦拭无视液体质量", null)]
@@ -145,12 +150,7 @@ namespace Unlock_Cheat
             this.MutantPlant = true;
             this.MutantPlant_Mult = false;
             this.MutantPlant_SelfHarvest= false;
-            this.Harvest_mult = 1f;
-            this.Harvest_storage_mult = 1f;
-            this.Harvest_poi_mult = 1f;
             this.Harvest_SolidConduitDispenser_Patched = false;
-            this.MissileLongRange_damage = 10;
-            this.BasicRadPill_MinRAD = 0f;
             this.HighEnergyParticle = false;
             this.MopTool = true;
 
