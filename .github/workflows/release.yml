@@ -80,7 +80,7 @@ jobs:
       uses: actions/cache@v5
       env:
         cache-name: cache-mod
-        files: '${{ matrix.configuration }}/*.cs'
+        files: '${{ matrix.configuration }}/revision.txt'
       with:
         path: .\Distribute
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.configuration }}-${{ hashFiles(env.files) }}
