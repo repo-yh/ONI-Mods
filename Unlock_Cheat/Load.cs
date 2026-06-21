@@ -65,7 +65,7 @@ namespace Unlock_Cheat
                     if (Options.RocketTile_Deconstruction) ManualPatch.ManualPatch_NS("Unlock_Cheat.RocketTile");
                     ManualPatch.ManualPatch_NS("Unlock_Cheat.BasicRadPill");
                     ManualPatch.ManualPatch_NS("Unlock_Cheat.Harvest");
-                    ManualPatch.ManualPatch_NS("Unlock_Cheat.NuclearResearchCenter");
+                    ManualPatch.ManualPatch_NS("NuclearResearch");
 
                 }
 

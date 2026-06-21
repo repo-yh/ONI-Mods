@@ -7,8 +7,25 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-namespace Unlock_Cheat.NuclearResearchCenter
+namespace NuclearResearch
 {
+
+    internal class NuclearResearch_Patch
+    {
+
+
+        [HarmonyPatch(typeof(NuclearResearchCenterConfig))]
+        [HarmonyPatch("ConfigureBuildingTemplate")]
+        public class NuclearResearchCenterConfig_ConfigureBuildingTemplate_Patch
+        {
+            public static void Postfix(NuclearResearchCenterConfig __instance, GameObject go)
+            {
+                go.AddOrGet<NuclearResearchCenter_SideScreen>();
+
+            }
+        }
+
+    }
     internal class NuclearResearchCenter_SideScreen : KMonoBehaviour, ISingleSliderControl, ISliderControl
     {
         public string SliderTitleKey
@@ -91,12 +108,11 @@ namespace Unlock_Cheat.NuclearResearchCenter
             component.OnCopySettings(data);
         });
 
-#pragma warning disable CS0649, CS0169 // 禁用 "从未赋值" 警告
+#pragma warning disable CS0649, CS0169,CS8618 // 禁用 "从未赋值" 警告
         [HideInInspector]
         [MyCmpReq]
         private HighEnergyParticleStorage storage;
-#pragma warning restore CS0649, CS0169 // 恢复警告
-
+#pragma warning restore CS0649, CS0169,CS8618  // 恢复警告
 
         public int minSlider = 100;
 

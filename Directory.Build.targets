@@ -36,7 +36,7 @@
 	
 	
   <!--Increment the version number after each build, resetting each day.-->
-	<Target Name="AutoIncrement" BeforeTargets="SetAutoVersion">
+	<Target Name="AutoIncrement"  BeforeTargets="ResolveAssemblyReferences">
 		<PropertyGroup>
 			<_RevisionFile >$(IntermediateOutputPath)/revision.txt</_RevisionFile>
 			<_RevisionFile  Condition="  '$(Configuration)' != 'Debug' And '$(ShouldDistribute)' != 'false'" >$(ProjectDir)/revision.txt</_RevisionFile>
@@ -80,7 +80,7 @@
 	</Target>
 
   <!--Create and update the mod_info and mod file.-->
-  <Target Name="WriteModInfoFile" AfterTargets="AutoIncrement">
+  <Target Name="WriteModInfoFile" AfterTargets="AutoIncrement" >
 	  <PropertyGroup>
 		  <ModInfoContent>
 			  APIVersion: 2;
@@ -101,6 +101,14 @@
                       description: &quot;$(Description)&quot;;
                       title: &quot;$(Title)&quot;" />
   </Target>
+	
+	
+	<Target Name="SetDllVersion" AfterTargets="WriteModInfoFile">
+		<PropertyGroup>
+			<AssemblyVersion>$(Version)</AssemblyVersion>
+			<FileVersion>$(Version)</FileVersion>
+		</PropertyGroup>
+	</Target>
 
   <!--Prevent game assemblies from being copied (and thus merged).-->
   <Target Name="ClearCopyLocalReferences" AfterTargets="ResolveAssemblyReferences">
@@ -109,13 +117,6 @@
     </ItemGroup>
   </Target>
 
-<Target Name="SetDllVersion" BeforeTargets="ResolveAssemblyReferences">
-	<PropertyGroup>
-		<AssemblyVersion>$(Version)</AssemblyVersion>
-		<FileVersion>$(Version)</FileVersion>
-	</PropertyGroup>
-</Target>
-	
 	
 	
   <!--Merge required assemblies.-->

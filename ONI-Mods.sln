@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTuner_mod", "GeoTuner_mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage_Isolation", "Storage_Isolation\Storage_Isolation.csproj", "{0F98F841-879B-4896-9193-4F375B3B0F4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuclearResearch", "NuclearResearch\NuclearResearch.csproj", "{109D64D9-BF38-D762-B295-7CBB31C697C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI|Any CPU = CI|Any CPU
@@ -66,6 +68,12 @@ Global
 		{0F98F841-879B-4896-9193-4F375B3B0F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F98F841-879B-4896-9193-4F375B3B0F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F98F841-879B-4896-9193-4F375B3B0F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.CI|Any CPU.ActiveCfg = CI|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.CI|Any CPU.Build.0 = CI|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

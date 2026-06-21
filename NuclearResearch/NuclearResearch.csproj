@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <Title>大容量材料研究终端</Title>
+	  <Description>可以存储大量的辐射粒子,用于研究.</Description>
+	  <UsesPLib>false</UsesPLib>
+	  <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+	  <Nullable>enable</Nullable>
+	  <ILRepack>false</ILRepack>
+	  <UsesAzeLib>true</UsesAzeLib>
+  </PropertyGroup>
+
+</Project>
