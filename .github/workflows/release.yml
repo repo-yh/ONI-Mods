@@ -53,7 +53,7 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat]
+        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat, NuclearResearch, Storage_Isolation]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
     env:
