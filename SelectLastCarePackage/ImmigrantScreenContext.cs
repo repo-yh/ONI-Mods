@@ -1,7 +1,10 @@
 using HarmonyLib;
 using KSerialization;
+using SelectLastCarePackage.CarePackagePanel;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 namespace laz_yh.SelectLastCarePackage
 {
@@ -124,19 +127,43 @@ namespace laz_yh.SelectLastCarePackage
                     else if (c is CarePackageContainer carePackageContainer)
                     {
 
-                        carePackageContainer.SetReshufflingState(true);
+                        // carePackageContainer.SetReshufflingState(true);
+                        KButton reshuffleButton = Traverse.Create(carePackageContainer).Field("reshuffleButton").GetValue<KButton>();
+                        //Traverse.Create(carePackageContainer).Field("reshuffleButton").Field("onClick").SetValue(new System.Action(delegate
+                        //{
 
-                        Traverse.Create(carePackageContainer).Field("reshuffleButton").Field("onClick").SetValue(new System.Action(delegate
+                        //    ImmigrantScreenMethod.Reshuffle(carePackageContainer);
+
+                        //}));
+
+                        KButton kbutton = Util.KInstantiateUI<KButton>(reshuffleButton.gameObject, reshuffleButton.transform.parent.gameObject, true);
+                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 200f, 100f);
+                        LocText text = kbutton.transform.GetComponentInChildren<LocText>();
+                        if (text != null)
                         {
+                            if (!text.enabled)
+                            {
+                                text.enabled = true;
+                            }
+                            if (!text.gameObject.activeSelf)
+                            {
+                                text.gameObject.SetActive(true);
+                            }
+                            text.key = string.Empty;
+                            text.SetText(Languages.MANUALSELECTCAREPACKAGE);
+  
+                        }
 
-                            ImmigrantScreenMethod.Reshuffle(carePackageContainer);
 
-                        }));
+                        kbutton.onClick += delegate ()
+                        {
+                            CarePackagePanel.Open(__instance, carePackageContainer);
+                        };
                     }
 
 
 
-               
+
                 }
 
             );
