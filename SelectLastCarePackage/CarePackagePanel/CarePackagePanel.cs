@@ -213,7 +213,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component.anchorMin = new Vector2(0f, 1f);
                 component.anchorMax = new Vector2(1f, 1f);
                 component.pivot = new Vector2(0.5f, 1f);
-                component.sizeDelta = new Vector2(-20f, 30f);
+                component.sizeDelta = new Vector2(-14f, 30f);
                 component.anchoredPosition = new Vector2(0f, -36f);
                 gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.1f);
                 GameObject gameObject2 = new GameObject("Field", new Type[]
@@ -229,8 +229,8 @@ namespace SelectLastCarePackage.CarePackagePanel
                 RectTransform component3 = gameObject2.GetComponent<RectTransform>();
                 component3.anchorMin = Vector2.zero;
                 component3.anchorMax = Vector2.one;
-                component3.offsetMin = new Vector2(6f, 2f);
-                component3.offsetMax = new Vector2(-6f, -2f);
+                component3.offsetMin = new Vector2(0f, 2f);
+                component3.offsetMax = new Vector2(0f, -2f);
                 // 优先克隆游戏现成的搜索输入框（含未激活的侧边屏实例），样式与行为与本体一致
                 KInputTextField inputField = null;
                 KInputTextField[] all = Resources.FindObjectsOfTypeAll<KInputTextField>();
@@ -334,7 +334,15 @@ namespace SelectLastCarePackage.CarePackagePanel
                 gameObject = Util.KInstantiateUI(srcClose.gameObject, transform.gameObject, true);
                 ToolTip toolTip = gameObject.GetComponent<ToolTip>();
                 DestroyImmediate(toolTip);
-                KleiItemsUI.ConfigureTooltipOn(gameObject, STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
+                toolTip = gameObject.AddComponent<ToolTip>();
+                toolTip.tooltipPivot = new Vector2(0.5f, 0f);
+                toolTip.tooltipPositionOffset = new Vector2(0f, 10f);
+                toolTip.parentPositionAnchor = new Vector2(0.5f, 0.5f);
+                toolTip.toolTipPosition = ToolTip.TooltipPosition.Custom;
+                toolTip.SetSimpleTooltip(STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
+                toolTip.UseFixedStringKey=true;
+
+                //KleiItemsUI.ConfigureTooltipOn(gameObject, STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
                 // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
                 KButton kButton = gameObject.GetComponent<KButton>();
                 kButton.ClearOnClick();
@@ -346,7 +354,7 @@ namespace SelectLastCarePackage.CarePackagePanel
         }
 
         // 候选过滤：满足解锁要求且未被任何补给包卡持有（含自己当前包，面板本来就是替换它的）才进列表（占用判断镜像原版 IsCharacterRedundant：静态 containers、Unity 判活、info 引用比较）
-        private bool IsAvailable(CarePackageInfo info, List<ITelepadDeliverableContainer>  containers)
+        private bool IsAvailable(CarePackageInfo info)
         {
             if (info == null || (info.requirement != null && !info.requirement()))
             {
@@ -374,13 +382,11 @@ namespace SelectLastCarePackage.CarePackagePanel
                 return;
             }
             Transform srcLabel = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/TitleLabel") : null;
-            List<ITelepadDeliverableContainer> containers = Traverse.Create(typeof(CarePackageContainer)).Field("containers").GetValue<List<ITelepadDeliverableContainer>>();
-
             int num = 0;
             foreach (CarePackagePanel.CarePackageOption captured2 in this.All)
             {
                 CarePackagePanel.CarePackageOption captured = captured2;
-                if (!this.IsAvailable(captured.info, containers))
+                if (!this.IsAvailable(captured.info))
                 {
                     continue;
                 }
@@ -647,6 +653,19 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private static Immigration cachedSource;
 
+        private List<ITelepadDeliverableContainer> __containers;
+
+        private List<ITelepadDeliverableContainer> containers
+        {
+            get {
+                if (__containers!= null && __containers.Count > 0)
+                {
+                    return __containers;
+                }
+                __containers =  Traverse.Create(typeof(CarePackageContainer)).Field("containers").GetValue<List<ITelepadDeliverableContainer>>();
+                return __containers;
+            }
+        }
         private readonly Dictionary<CarePackageInfo, GameObject> _rows = new Dictionary<CarePackageInfo, GameObject>();
 
         public class CarePackageOption
