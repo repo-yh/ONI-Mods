@@ -20,6 +20,11 @@ namespace SelectLastCarePackage.CarePackagePanel
     public class CarePackagePanel : KScreen
     {
         // 排到输入栈顶（CarePackageContainer 的 GetSortKey 是 50 且会消费按键），优先接收 Esc 等按键
+
+        public override bool IsModal()
+        {
+            return true;
+        }
         public override float GetSortKey()
         {
             return MODAL_SCREEN_SORT_KEY;
@@ -126,7 +131,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             Canvas canvas = gameObject.GetComponent<Canvas>();
             canvas.overrideSorting = true;
             Canvas container_canvas = container.GetComponentInParent<Canvas>();
-            canvas.sortingOrder = ((container_canvas != null) ? container_canvas.sortingOrder : 0) + 100;
+            canvas.sortingOrder = ((container_canvas != null) ? container_canvas.sortingOrder : 0) + 3;
 
 
 
@@ -151,7 +156,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             rectTransform2.sizeDelta = new Vector2(580f, 540f);
             rectTransform2.anchoredPosition = Vector2.zero;
             Image image2 = gameObject2.GetComponent<Image>();
-            image2.color = Color.white;
+            image2.color = new Color(0.09f, 0.1f, 0.12f, 1f);
             image2.raycastTarget = true;
 
 
@@ -174,7 +179,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 if (locText != null)
                 {
                     locText.key = string.Empty;
-                    locText.color = Color.black;
+                    locText.color = Color.white;
                     locText.fontSize = 18f;
                     locText.raycastTarget = false;
                     this._title = locText;
@@ -273,7 +278,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             component.anchorMin = Vector2.zero;
             component.anchorMax = Vector2.one;
             component.offsetMin = new Vector2(7f, 20f);
-            component.offsetMax = new Vector2(-7f, -70f);
+            component.offsetMax = new Vector2(-7f, -80f);
             gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.05f);
             ScrollRect scrollRect = gameObject.AddComponent<ScrollRect>();
             scrollRect.horizontal = false;
@@ -341,41 +346,44 @@ namespace SelectLastCarePackage.CarePackagePanel
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 8f, width);
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 8f, height);
 
-            // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
-            KButton kButton = gameObject.GetComponent<KButton>();
-            kButton.ClearOnClick();
-            kButton.onClick += delegate ()
-                {
-                    CarePackagePanel.Show(false);
-                };
+                ToolTip ToolTip = gameObject.GetComponent<ToolTip>();
+
+                Canvas canvas  = ToolTip.gameObject.GetComponentInParent<Canvas>();
+
+                Canvas canvas1 = srcClose.gameObject.GetComponentInParent<Canvas>();
+                Debug.Log("[ToolTip]" + canvas.sortingOrder + " " + canvas.name + " " + canvas.sortingLayerName);
+                Debug.Log("[srcClose]" + canvas1.sortingOrder + " " + canvas1.name + " " + canvas1.sortingLayerName);
+
+                // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
+                KButton kButton = gameObject.GetComponent<KButton>();
+                kButton.ClearOnClick();
+                kButton.onClick += delegate ()
+                    {
+                        CarePackagePanel.Show(false);
+                    }; 
             }
         }
 
         // 候选过滤：满足解锁要求且未被任何补给包卡持有（含自己当前包，面板本来就是替换它的）才进列表（占用判断镜像原版 IsCharacterRedundant：静态 containers、Unity 判活、info 引用比较）
-        private bool IsAvailable(CarePackageInfo info)
+        private bool IsAvailable(CarePackageInfo info, List<ITelepadDeliverableContainer>  containers)
         {
-            if (info == null || this.Container == null)
+            if (info == null || (info.requirement != null && !info.requirement()))
             {
                 return false;
             }
-            if (info.requirement != null && !info.requirement())
-            {
-                return false;
-            }
-            List<ITelepadDeliverableContainer> containers = Traverse.Create(typeof(CarePackageContainer)).Field("containers").GetValue<List<ITelepadDeliverableContainer>>();
             if (containers == null)
             {
-                return false;
+                return true;
             }
             foreach (ITelepadDeliverableContainer container in containers)
             {
                 CarePackageContainer carePackageContainer = container as CarePackageContainer;
-                if (carePackageContainer != null && carePackageContainer.Info != info)
+                if (carePackageContainer != null && carePackageContainer.Info == info)
                 {
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
 
         private void FillRows()
@@ -385,11 +393,13 @@ namespace SelectLastCarePackage.CarePackagePanel
                 return;
             }
             Transform srcLabel = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/TitleLabel") : null;
+            List<ITelepadDeliverableContainer> containers = Traverse.Create(typeof(CarePackageContainer)).Field("containers").GetValue<List<ITelepadDeliverableContainer>>();
+
             int num = 0;
             foreach (CarePackagePanel.CarePackageOption captured2 in this.All)
             {
                 CarePackagePanel.CarePackageOption captured = captured2;
-                if (!this.IsAvailable(captured.info))
+                if (!this.IsAvailable(captured.info, containers))
                 {
                     continue;
                 }
@@ -436,6 +446,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                         locText.fontSize = 18f;
                         locText.raycastTarget = false;
                         tmp_Text = locText;
+
                     }
                 }
                 if (tmp_Text != null)
