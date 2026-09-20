@@ -1,6 +1,7 @@
 ﻿using Database;
 using HarmonyLib;
 using laz_yh.SelectLastCarePackage;
+using laz_yh.SelectLastCarePackage.Patches;
 using STRINGS;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,10 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         public override void OnKeyDown(KButtonEvent e)
         {
-            bool flag = e.TryConsume(global::Action.Escape);
+           bool flag = e.TryConsume(global::Action.Escape);
             if (flag)
             {
-                this.Close();
+                CarePackagePanel.Show(false);
                 e.Consumed = true;
             }
             else
@@ -48,19 +49,34 @@ namespace SelectLastCarePackage.CarePackagePanel
         }
         protected override void OnDeactivate()
         {
+            this.gameObject.SetActive(false);
             base.OnDeactivate();
+            if (CarePackagePanel.instance != null && CarePackagePanel.instance.gameObject != null)
+            {
+                UnityEngine.Object.Destroy(CarePackagePanel.instance.gameObject);
+
+            }
+            CarePackagePanel.instance = null;
         }
-        public static void Open(ImmigrantScreen target, CarePackageContainer container)
+        public static void Show(bool show, CarePackageContainer container = null)
         {
-            bool flag = target.gameObject == null;
+            // 关闭请求 或 重开前清旧面板，共用一段关闭逻辑
+            if (!show || CarePackagePanel.instance != null)
+            {
+                if (CarePackagePanel.instance != null && CarePackagePanel.instance.gameObject != null)
+                {
+                    CarePackagePanel.instance.Deactivate();
+                }
+                CarePackagePanel.instance = null;
+                if (!show)
+                {
+                    return;
+                }
+            }
+            ImmigrantScreen target = ImmigrantScreen.instance;
+            bool flag = target == null || target.gameObject == null;
             if (!flag)
             {
-                bool flag2 = CarePackagePanel.instance != null;
-                if (flag2)
-                {
-                    CarePackagePanel.instance.Close();
-                    CarePackagePanel.instance = null;
-                }
                 GameObject gameObject = new GameObject("CarePackageUI", new Type[]
 				{
 					typeof(RectTransform),
@@ -84,9 +100,6 @@ namespace SelectLastCarePackage.CarePackagePanel
 
 
                 instance.Activate();
-
-                //CarePackagePanel.instance.rootCanvas = gameObject;
-                //CarePackagePanel.instance.Activate();
             }
         }
         private string GetCurrentContainer()
@@ -138,7 +151,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             rectTransform2.sizeDelta = new Vector2(580f, 540f);
             rectTransform2.anchoredPosition = Vector2.zero;
             Image image2 = gameObject2.GetComponent<Image>();
-            image2.color = new Color(0.09f, 0.1f, 0.12f, 1f);
+            image2.color = Color.white;
             image2.raycastTarget = true;
 
 
@@ -152,7 +165,27 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private void BuildTitle(Transform transform)
         {
-            this._title = MakeText(transform, "Title", 18f);
+            Transform srcLabel = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/TitleLabel") : null;
+            if (srcLabel != null)
+            {
+                // 克隆官方 TitleLabel（LocText，字体样式随官方主题），清 key 防本地化重置，对冲官方白字
+                GameObject gameObject = Util.KInstantiateUI(srcLabel.gameObject, transform.gameObject, true);
+                LocText locText = gameObject.GetComponent<LocText>();
+                if (locText != null)
+                {
+                    locText.key = string.Empty;
+                    locText.color = Color.black;
+                    locText.fontSize = 18f;
+                    locText.raycastTarget = false;
+                    this._title = locText;
+                    Debug.Log("[SelectLastCarePackage] 标题：克隆官方 TitleLabel");
+                }
+            }
+            if (this._title == null)
+            {
+                Debug.LogWarning("[SelectLastCarePackage] 标题：未找到官方 TitleLabel，回退自建文本");
+                this._title = MakeText(transform, "Title", 18f);
+            }
             if (this._title == null)
             {
                 return;
@@ -164,7 +197,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             rectTransform.sizeDelta = new Vector2(-20f, 26f);
             rectTransform.anchoredPosition = new Vector2(0f, -6f);
             this._title.alignment = TextAlignmentOptions.Left;
-            this._title.color = new Color(0.75f, 0.88f, 1f, 1f);
         }
 
         private void BuildSearchBar(Transform transform)
@@ -184,7 +216,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component.pivot = new Vector2(0.5f, 1f);
                 component.sizeDelta = new Vector2(-20f, 30f);
                 component.anchoredPosition = new Vector2(0f, -36f);
-                gameObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.1f);
+                gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.1f);
                 GameObject gameObject2 = new GameObject("Field", new Type[]
                 {
                         typeof(RectTransform),
@@ -213,6 +245,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 }
                 if (inputField != null)
                 {
+                    Debug.Log("[SelectLastCarePackage] 搜索框：克隆官方 KInputTextField");
                     RectTransform rectTransform3 = inputField.rectTransform();
                     rectTransform3.anchorMin = Vector2.zero;
                     rectTransform3.anchorMax = Vector2.one;
@@ -227,6 +260,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 else
                 {
                     // 回退：纯代码组装 KInputTextField
+                    Debug.LogWarning("[SelectLastCarePackage] 搜索框：未找到官方 KInputTextField，回退自建输入框");
                     GameObject textArea = new GameObject("Text Area", new Type[]
                     {
                             typeof(RectTransform),
@@ -292,9 +326,9 @@ namespace SelectLastCarePackage.CarePackagePanel
             RectTransform component = gameObject.GetComponent<RectTransform>();
             component.anchorMin = Vector2.zero;
             component.anchorMax = Vector2.one;
-            component.offsetMin = new Vector2(7f, 38f);
+            component.offsetMin = new Vector2(7f, 20f);
             component.offsetMax = new Vector2(-7f, -70f);
-            gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.3f);
+            gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.05f);
             ScrollRect scrollRect = gameObject.AddComponent<ScrollRect>();
             scrollRect.horizontal = false;
             scrollRect.vertical = true;
@@ -360,10 +394,12 @@ namespace SelectLastCarePackage.CarePackagePanel
                 }
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 8f, width);
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 8f, height);
+                Debug.Log("[SelectLastCarePackage] 关闭按钮：克隆官方 CloseButton");
             }
             else
             {
                 // 回退：原版按钮找不到时按旧方式纯代码组装
+                Debug.LogWarning("[SelectLastCarePackage] 关闭按钮：未找到官方 CloseButton，回退自建按钮");
                 gameObject = new GameObject("Close", new Type[]
                 {
                         typeof(RectTransform),
@@ -377,7 +413,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component.pivot = new Vector2(0.5f, 0f);
                 component.sizeDelta = new Vector2(170f, 30f);
                 component.anchoredPosition = new Vector2(0f, 8f);
-                gameObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.16f);
+                gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.16f);
                 TMP_Text tmp_Text = MakeText(gameObject.transform, "Label", 17f);
                 if (tmp_Text != null)
                 {
@@ -393,34 +429,45 @@ namespace SelectLastCarePackage.CarePackagePanel
                 button2.transition = Selectable.Transition.None;
                 button2.onClick.AddListener(delegate ()
                 {
-                    CarePackagePanel.Close();
+                    CarePackagePanel.Show(false);
                 });
                 return;
             }
-            // 克隆体：Button 的 UnityEvent 可能携带 prefab 序列化的原版回调，先清空再绑自己的关闭逻辑
-            Button button = gameObject.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick = new Button.ButtonClickedEvent();
-            }
+            // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
             KButton kButton = gameObject.GetComponent<KButton>();
-            if (kButton != null)
+            kButton.ClearOnClick();
+            kButton.onClick += delegate ()
             {
-                kButton.onClick += delegate ()
-                {
-                    CarePackagePanel.Close();
-                };
-            }
-            else if (button != null)
-            {
-                button.onClick.AddListener(delegate ()
-                {
-                    CarePackagePanel.Close();
-                });
-            }
+                CarePackagePanel.Show(false);
+            };
         }
 
-
+        // 候选过滤：满足解锁要求且未被任何补给包卡持有（含自己当前包，面板本来就是替换它的）才进列表（占用判断镜像原版 IsCharacterRedundant：静态 containers、Unity 判活、info 引用比较）
+        private bool IsAvailable(CarePackageInfo info)
+        {
+            if (info == null || this.Container == null)
+            {
+                return false;
+            }
+            if (info.requirement != null && !info.requirement())
+            {
+                return false;
+            }
+            List<ITelepadDeliverableContainer> containers = Traverse.Create(typeof(CarePackageContainer)).Field("containers").GetValue<List<ITelepadDeliverableContainer>>();
+            if (containers == null)
+            {
+                return false;
+            }
+            foreach (ITelepadDeliverableContainer container in containers)
+            {
+                CarePackageContainer carePackageContainer = container as CarePackageContainer;
+                if (carePackageContainer != null && carePackageContainer.Info != info)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private void FillRows()
         {
@@ -428,10 +475,23 @@ namespace SelectLastCarePackage.CarePackagePanel
             {
                 return;
             }
+            Transform srcLabel = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/TitleLabel") : null;
+            if (srcLabel != null)
+            {
+                Debug.Log("[SelectLastCarePackage] 行文字：克隆官方 TitleLabel");
+            }
+            else
+            {
+                Debug.LogWarning("[SelectLastCarePackage] 行文字：未找到官方 TitleLabel，回退自建文本");
+            }
             int num = 0;
             foreach (CarePackagePanel.CarePackageOption captured2 in this.All)
             {
                 CarePackagePanel.CarePackageOption captured = captured2;
+                if (!this.IsAvailable(captured.info))
+                {
+                    continue;
+                }
                 GameObject gameObject = new GameObject("Row" + num.ToString(), new Type[]
                 {
                         typeof(RectTransform),
@@ -443,7 +503,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 LayoutElement component = gameObject.GetComponent<LayoutElement>();
                 component.minHeight = 27f;
                 component.preferredHeight = 27f;
-                gameObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, (num % 2 == 0) ? 0.05f : 0.02f);
+                gameObject.GetComponent<Image>().color = Color.white;
                 GameObject gameObject2 = new GameObject("Icon", new Type[]
                 {
                         typeof(RectTransform),
@@ -463,7 +523,25 @@ namespace SelectLastCarePackage.CarePackagePanel
                 {
                     component3.sprite = captured.icon;
                 }
-                TMP_Text tmp_Text = MakeText(gameObject.transform, "Label", 18f);
+                TMP_Text tmp_Text = null;
+                if (srcLabel != null)
+                {
+                    // 克隆官方 TitleLabel 作行文字，清 key 防本地化重置，对冲官方白字
+                    GameObject labelObject = Util.KInstantiateUI(srcLabel.gameObject, gameObject.transform.gameObject, true);
+                    LocText locText = labelObject.GetComponent<LocText>();
+                    if (locText != null)
+                    {
+                        locText.key = string.Empty;
+                        locText.color = Color.black;
+                        locText.fontSize = 18f;
+                        locText.raycastTarget = false;
+                        tmp_Text = locText;
+                    }
+                }
+                if (tmp_Text == null)
+                {
+                    tmp_Text = MakeText(gameObject.transform, "Label", 18f);
+                }
                 if (tmp_Text != null)
                 {
                     tmp_Text.SetText(captured.displayName + "   " + captured.quantity);
@@ -490,11 +568,17 @@ namespace SelectLastCarePackage.CarePackagePanel
         private void Select(CarePackagePanel.CarePackageOption option)
         {
            CarePackagePanel.Replace(this.Container, option);
-            this.Close();
+            CarePackagePanel.Show(false);
         }
         private static List<CarePackagePanel.CarePackageOption> BuildPackages()
         {
+            if (cachedPackages != null && cachedSource == Immigration.Instance)
+            {
+                return cachedPackages;
+            }
             List<CarePackagePanel.CarePackageOption> list = new List<CarePackagePanel.CarePackageOption>();
+            cachedSource = Immigration.Instance;
+            cachedPackages = list;
             if (Immigration.Instance == null)
             {
                 return list;
@@ -506,7 +590,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
             foreach (CarePackageInfo carePackageInfo in value)
             {
-                if (carePackageInfo != null && (carePackageInfo.requirement == null || carePackageInfo.requirement()))
+                if (carePackageInfo != null)
                 {
                     list.Add(new CarePackagePanel.CarePackageOption
                     {
@@ -606,6 +690,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
             return Regex.Replace(s, "<[^>]*>", string.Empty);
         }
+        [Obsolete("回退专用：官方组件克隆失败时才使用，新代码请克隆官方组件")]
         private TMP_Text MakeText(Transform parent, string name, float size)
         {
             GameObject gameObject = new GameObject(name, new Type[]
@@ -620,7 +705,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             textMeshProUGUI.fontStyle = FontStyles.Normal;
           
             textMeshProUGUI.fontSize = size;
-            textMeshProUGUI.color = Color.white;
+            textMeshProUGUI.color = Color.black;
             textMeshProUGUI.raycastTarget = false;
             textMeshProUGUI.textWrappingMode = TextWrappingModes.NoWrap;
             textMeshProUGUI.overflowMode = TextOverflowModes.Overflow;
@@ -634,53 +719,19 @@ namespace SelectLastCarePackage.CarePackagePanel
             {
                 return;
             }
-            CharacterSelectionController value = Traverse.Create(container).Field("controller").GetValue<CharacterSelectionController>();
-            bool flag = false;
-            if (value != null && container.carePackageInstanceData != null)
+            CharacterSelectionController controller = Traverse.Create(container).Field("controller").GetValue<CharacterSelectionController>();
+            bool selected = controller != null && container.carePackageInstanceData != null && controller.IsSelected(container.carePackageInstanceData);
+            if (selected)
             {
-                flag = value.IsSelected(container.carePackageInstanceData);
-                if (flag)
-                {
-                    container.DeselectDeliverable();
-                }
+                container.DeselectDeliverable();
             }
-            Traverse.Create(container).Field("info").SetValue(option.info);
-            container.carePackageInstanceData = new CarePackageContainer.CarePackageInstanceData
-            {
-                info = option.info,
-                facadeID = ((option.info.facadeID == "SELECTRANDOM") ? CarePackagePanel.RandomFacade(option.info) : option.info.facadeID)
-            };
             Traverse.Create(container).Method("ClearEntryIcons", Array.Empty<object>()).GetValue();
-            Traverse.Create(container).Method("SetAnimator", Array.Empty<object>()).GetValue();
-            Traverse.Create(container).Method("SetInfoText", Array.Empty<object>()).GetValue();
-            if (flag)
+            ImmigrationRandomCarePackagePatch.PendingOverride = option.info;
+            Traverse.Create(container).Method("GenerateCharacter", new Type[] { typeof(bool) }).GetValue(new object[] { controller != null && controller.IsStarterMinion });
+            if (selected)
             {
                 container.SelectDeliverable();
             }
-        }
-
-        private static string RandomFacade(CarePackageInfo info)
-        {
-            List<EquippableFacadeResource> list = Db.GetEquippableFacades().resources.FindAll((EquippableFacadeResource match) => match.DefID == info.id);
-            if (list.Count <= 0)
-            {
-                return null;
-            }
-            return list.GetRandom<EquippableFacadeResource>().Id;
-        }
-
-
-        public  void Close()
-        {
-            gameObject.SetActive(false);
-            this.Deactivate();
-
-            if (CarePackagePanel.instance != null && CarePackagePanel.instance.gameObject != null)
-            {
-                UnityEngine.Object.Destroy(CarePackagePanel.instance.gameObject);
-
-            }
-            CarePackagePanel.instance = null;
         }
 
 
@@ -688,10 +739,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private const string DEFAULT_FONT_UI = "GRAYSTROKE REGULAR SDF";
 
-        private static TMP_Text fontTemplate;
-
         private static TMP_FontAsset font;
-        private static FontStyles FontStyle = FontStyles.Normal;
 
 
 
@@ -721,25 +769,18 @@ namespace SelectLastCarePackage.CarePackagePanel
         private RectTransform _content;
 
         private TMP_Text _title;
-        private static bool cameraControlDisabled;
 
         private static CarePackagePanel instance;
 
         CarePackageContainer Container;
 
-        private GameObject listContent;
-
-        private Button confirmButton;
-
         private Dictionary<HashedString, GameObject> optionButtons = new Dictionary<HashedString, GameObject>();
 
-        private HashedString selectedTypeId;
-
-        private string selectedTypeIdString;
-
-        private GameObject rootCanvas;
-
         public List<CarePackagePanel.CarePackageOption> All = new List<CarePackagePanel.CarePackageOption>();
+
+        private static List<CarePackagePanel.CarePackageOption> cachedPackages;
+
+        private static Immigration cachedSource;
 
         private readonly Dictionary<CarePackageInfo, GameObject> _rows = new Dictionary<CarePackageInfo, GameObject>();
 
