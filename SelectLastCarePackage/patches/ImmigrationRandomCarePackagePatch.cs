@@ -40,9 +40,13 @@ namespace laz_yh.SelectLastCarePackage.Patches
         }
 
         [HarmonyPatch(typeof(CarePackageContainer), "GenerateCharacter")]
-        public static void Postfix()
+        public static class CarePackageContainer_GenerateCharacter // 随机补给包 + 官方生成流程后清一次性指定包
         {
-            PendingOverride = null;
+
+            public static void Postfix()
+            {
+                PendingOverride = null;
+            }
         }
     }
 }
