@@ -165,7 +165,7 @@ namespace laz_yh.SelectLastCarePackage
 
                         kbutton.onClick += delegate ()
                         {
-                            CarePackagePanel.Open(__instance, carePackageContainer);
+                            CarePackagePanel.Show(true, carePackageContainer);
                         };
                     }
 
