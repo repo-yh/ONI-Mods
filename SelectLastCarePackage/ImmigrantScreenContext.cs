@@ -2,6 +2,7 @@ using HarmonyLib;
 using KSerialization;
 using SelectLastCarePackage.CarePackagePanel;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -137,7 +138,8 @@ namespace laz_yh.SelectLastCarePackage
                         //}));
 
                         KButton kbutton = Util.KInstantiateUI<KButton>(reshuffleButton.gameObject, reshuffleButton.transform.parent.gameObject, true);
-                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 200f, 100f);
+                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 200f, 140f);
+
                         LocText text = kbutton.transform.GetComponentInChildren<LocText>();
                         if (text != null)
                         {
@@ -150,10 +152,16 @@ namespace laz_yh.SelectLastCarePackage
                                 text.gameObject.SetActive(true);
                             }
                             text.key = string.Empty;
-                            text.SetText(Languages.MANUALSELECTCAREPACKAGE);
-  
-                        }
 
+                            text.alignment = TextAlignmentOptions.MidlineLeft;
+
+                            // 文字较长：禁用换行，在文本框内自动缩放字号，保证单行不超出按钮
+                            text.textWrappingMode = TextWrappingModes.NoWrap;
+                            text.enableAutoSizing = true;
+                            text.fontSizeMin = 10f;
+                            text.fontSizeMax = 14f;
+                            text.SetText(Languages.MANUALSELECTCAREPACKAGE);
+                        }
 
                         kbutton.onClick += delegate ()
                         {
