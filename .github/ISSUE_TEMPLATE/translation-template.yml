@@ -1,18 +1,18 @@
-name:  ·­ÒëÎÄ¼ş(ÖĞÎÄ)
-description: ÉÏ´«Ò»¸öĞÂµÄ·­ÒëÎÄ¼ş.
+name:  ç¿»è¯‘æ–‡ä»¶(ä¸­æ–‡)
+description: ä¸Šä¼ ä¸€ä¸ªæ–°çš„ç¿»è¯‘æ–‡ä»¶.
 title: "[Translation] "
 labels: ["i18n"]
 body:
   - type: markdown
     attributes:
       value: |
-        ¸ĞĞ»ÄúÌá³ö·­ÒëÉÏ´«ÇëÇó£¡ÇëÌîĞ´ÒÔÏÂĞÅÏ¢°ïÖúÎÒÃÇÁË½âÄúµÄĞèÇó.
+        æ„Ÿè°¢æ‚¨æå‡ºç¿»è¯‘ä¸Šä¼ è¯·æ±‚ï¼è¯·å¡«å†™ä»¥ä¸‹ä¿¡æ¯å¸®åŠ©æˆ‘ä»¬äº†è§£æ‚¨çš„éœ€æ±‚.
         
   - type: dropdown
     id: mod-name
     attributes:
-      label: modÃû×Ö
-      description: ÇëÌá¹©ÄãÒªÉÏ´«ÄÄ¸ömodµÄ·­ÒëÎÄ¼ş.
+      label: modåå­—
+      description: è¯·æä¾›ä½ è¦ä¸Šä¼ å“ªä¸ªmodçš„ç¿»è¯‘æ–‡ä»¶.
       options:
         - Multiple_Power_Generator
         - SelectLastCarePackage
@@ -24,24 +24,24 @@ body:
   - type: input
     id: translation-language
     attributes:
-      label:  ·­ÒëµÄÓïÑÔ
-      description: ÇëÌá¹©ÄãÒª·­ÒëÄÄÖÖÓïÑÔ?
-      placeholder: ±ÈÈçen (Ó¢Óï) zh (ÖĞÎÄ)
+      label:  ç¿»è¯‘çš„è¯­è¨€
+      description: è¯·æä¾›ä½ è¦ç¿»è¯‘å“ªç§è¯­è¨€?
+      placeholder: æ¯”å¦‚en (è‹±è¯­) zh (ä¸­æ–‡)
     validations:
       required: true
       
   - type: textarea
     id: upload-file
     attributes:
-      label: ÉÏ´«·­ÒëÎÄ¼ş
-      description: Çë¸½¼şÉÏ´«Ò»¸ö.po·­ÒëÎÄ¼ş.
+      label: ä¸Šä¼ ç¿»è¯‘æ–‡ä»¶
+      description: è¯·é™„ä»¶ä¸Šä¼ ä¸€ä¸ª.poç¿»è¯‘æ–‡ä»¶.
     validations:
       required: true    
       
   - type: textarea
     id: additional-info
     attributes:
-      label: ¶îÍâĞÅÏ¢
-      description: ÊÇ·ñÓĞÆäËû¶îÍâĞÅÏ¢Ìá¹©.
+      label: é¢å¤–ä¿¡æ¯
+      description: æ˜¯å¦æœ‰å…¶ä»–é¢å¤–ä¿¡æ¯æä¾›.
     validations:
       required: false

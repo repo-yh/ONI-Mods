@@ -66,7 +66,7 @@ namespace laz_yh.SelectLastCarePackage
                     }
                     else if (item is CarePackageContainer carePackageContainer)
                     {
-                        //global::Debug.Log("CarePackageContainer£º"+ carePackageContainer.Info.id);
+                        //global::Debug.Log("CarePackageContainerï¼š"+ carePackageContainer.Info.id);
 
                         if (selectedDeliverables.Contains(carePackageContainer.carePackageInstanceData))
                         {
@@ -84,7 +84,7 @@ namespace laz_yh.SelectLastCarePackage
             }
             else {
 
-                global::Debug.Log("ÆäËûcontainersÃ»ÓÐÕÒµ½±»Ñ¡ÖÐµÄ");
+                global::Debug.Log("å…¶ä»–containersæ²¡æœ‰æ‰¾åˆ°è¢«é€‰ä¸­çš„");
 
             }
 
