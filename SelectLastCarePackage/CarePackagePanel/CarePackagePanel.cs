@@ -178,13 +178,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                     locText.fontSize = 18f;
                     locText.raycastTarget = false;
                     this._title = locText;
-                    Debug.Log("[SelectLastCarePackage] 标题：克隆官方 TitleLabel");
                 }
-            }
-            if (this._title == null)
-            {
-                Debug.LogWarning("[SelectLastCarePackage] 标题：未找到官方 TitleLabel，回退自建文本");
-                this._title = MakeText(transform, "Title", 18f);
             }
             if (this._title == null)
             {
@@ -245,7 +239,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                 }
                 if (inputField != null)
                 {
-                    Debug.Log("[SelectLastCarePackage] 搜索框：克隆官方 KInputTextField");
                     RectTransform rectTransform3 = inputField.rectTransform();
                     rectTransform3.anchorMin = Vector2.zero;
                     rectTransform3.anchorMax = Vector2.one;
@@ -256,53 +249,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                     {
                         placeholder.SetText(Languages.SEARCH_HINT);
                     }
-                }
-                else
-                {
-                    // 回退：纯代码组装 KInputTextField
-                    Debug.LogWarning("[SelectLastCarePackage] 搜索框：未找到官方 KInputTextField，回退自建输入框");
-                    GameObject textArea = new GameObject("Text Area", new Type[]
-                    {
-                            typeof(RectTransform),
-                            typeof(RectMask2D)
-                    });
-                    textArea.transform.SetParent(gameObject2.transform, false);
-                    RectTransform component4 = textArea.GetComponent<RectTransform>();
-                    component4.anchorMin = Vector2.zero;
-                    component4.anchorMax = Vector2.one;
-                    component4.offsetMin = Vector2.zero;
-                    component4.offsetMax = Vector2.zero;
-                    TMP_Text tmp_Text = MakeText(textArea.transform, "Placeholder", 16f);
-                    TMP_Text tmp_Text2 = MakeText(textArea.transform, "Text", 16f);
-                    if (tmp_Text2 != null)
-                    {
-                        tmp_Text2.color = Color.white;
-                        RectTransform rectTransform = tmp_Text2.rectTransform;
-                        rectTransform.anchorMin = Vector2.zero;
-                        rectTransform.anchorMax = Vector2.one;
-                        rectTransform.offsetMin = Vector2.zero;
-                        rectTransform.offsetMax = Vector2.zero;
-                        tmp_Text2.alignment = TextAlignmentOptions.MidlineLeft;
-                    }
-                    if (tmp_Text != null)
-                    {
-                        tmp_Text.color = new Color(1f, 1f, 1f, 0.4f);
-                        RectTransform rectTransform2 = tmp_Text.rectTransform;
-                        rectTransform2.anchorMin = Vector2.zero;
-                        rectTransform2.anchorMax = Vector2.one;
-                        rectTransform2.offsetMin = Vector2.zero;
-                        rectTransform2.offsetMax = Vector2.zero;
-                        tmp_Text.alignment = TextAlignmentOptions.MidlineLeft;
-                        tmp_Text.SetText(Languages.SEARCH_HINT);
-                    }
-                    inputField = gameObject2.AddComponent<KInputTextField>();
-                    inputField.textViewport = component4;
-                    inputField.textComponent = tmp_Text2;
-                    inputField.placeholder = tmp_Text;
-                    inputField.text = string.Empty;
-                }
-                if (inputField != null)
-                {
                     inputField.onValueChanged.AddListener(delegate (string value)
                     {
                         this.ApplyFilter(value);
@@ -394,52 +340,15 @@ namespace SelectLastCarePackage.CarePackagePanel
                 }
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 8f, width);
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 8f, height);
-                Debug.Log("[SelectLastCarePackage] 关闭按钮：克隆官方 CloseButton");
-            }
-            else
-            {
-                // 回退：原版按钮找不到时按旧方式纯代码组装
-                Debug.LogWarning("[SelectLastCarePackage] 关闭按钮：未找到官方 CloseButton，回退自建按钮");
-                gameObject = new GameObject("Close", new Type[]
-                {
-                        typeof(RectTransform),
-                        typeof(CanvasRenderer),
-                        typeof(Image)
-                });
-                gameObject.transform.SetParent(transform, false);
-                RectTransform component = gameObject.GetComponent<RectTransform>();
-                component.anchorMin = new Vector2(0.5f, 0f);
-                component.anchorMax = new Vector2(0.5f, 0f);
-                component.pivot = new Vector2(0.5f, 0f);
-                component.sizeDelta = new Vector2(170f, 30f);
-                component.anchoredPosition = new Vector2(0f, 8f);
-                gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.16f);
-                TMP_Text tmp_Text = MakeText(gameObject.transform, "Label", 17f);
-                if (tmp_Text != null)
-                {
-                    tmp_Text.SetText(Languages.BACK);
-                    RectTransform rectTransform = tmp_Text.rectTransform;
-                    rectTransform.anchorMin = Vector2.zero;
-                    rectTransform.anchorMax = Vector2.one;
-                    rectTransform.offsetMin = Vector2.zero;
-                    rectTransform.offsetMax = Vector2.zero;
-                    tmp_Text.alignment = TextAlignmentOptions.Center;
-                }
-                Button button2 = gameObject.AddComponent<Button>();
-                button2.transition = Selectable.Transition.None;
-                button2.onClick.AddListener(delegate ()
-                {
-                    CarePackagePanel.Show(false);
-                });
-                return;
-            }
+
             // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
             KButton kButton = gameObject.GetComponent<KButton>();
             kButton.ClearOnClick();
             kButton.onClick += delegate ()
-            {
-                CarePackagePanel.Show(false);
-            };
+                {
+                    CarePackagePanel.Show(false);
+                };
+            }
         }
 
         // 候选过滤：满足解锁要求且未被任何补给包卡持有（含自己当前包，面板本来就是替换它的）才进列表（占用判断镜像原版 IsCharacterRedundant：静态 containers、Unity 判活、info 引用比较）
@@ -476,14 +385,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                 return;
             }
             Transform srcLabel = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/TitleLabel") : null;
-            if (srcLabel != null)
-            {
-                Debug.Log("[SelectLastCarePackage] 行文字：克隆官方 TitleLabel");
-            }
-            else
-            {
-                Debug.LogWarning("[SelectLastCarePackage] 行文字：未找到官方 TitleLabel，回退自建文本");
-            }
             int num = 0;
             foreach (CarePackagePanel.CarePackageOption captured2 in this.All)
             {
@@ -526,7 +427,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                 TMP_Text tmp_Text = null;
                 if (srcLabel != null)
                 {
-                    // 克隆官方 TitleLabel 作行文字，清 key 防本地化重置，对冲官方白字
                     GameObject labelObject = Util.KInstantiateUI(srcLabel.gameObject, gameObject.transform.gameObject, true);
                     LocText locText = labelObject.GetComponent<LocText>();
                     if (locText != null)
@@ -537,10 +437,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                         locText.raycastTarget = false;
                         tmp_Text = locText;
                     }
-                }
-                if (tmp_Text == null)
-                {
-                    tmp_Text = MakeText(gameObject.transform, "Label", 18f);
                 }
                 if (tmp_Text != null)
                 {
@@ -690,29 +586,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
             return Regex.Replace(s, "<[^>]*>", string.Empty);
         }
-        [Obsolete("回退专用：官方组件克隆失败时才使用，新代码请克隆官方组件")]
-        private TMP_Text MakeText(Transform parent, string name, float size)
-        {
-            GameObject gameObject = new GameObject(name, new Type[]
-            {
-        typeof(RectTransform),
-        typeof(CanvasRenderer)
-            });
-            gameObject.transform.SetParent(parent, false);
-            TextMeshProUGUI textMeshProUGUI = gameObject.AddComponent<TextMeshProUGUI>();
-
-            textMeshProUGUI.font = Font;
-            textMeshProUGUI.fontStyle = FontStyles.Normal;
-          
-            textMeshProUGUI.fontSize = size;
-            textMeshProUGUI.color = Color.black;
-            textMeshProUGUI.raycastTarget = false;
-            textMeshProUGUI.textWrappingMode = TextWrappingModes.NoWrap;
-            textMeshProUGUI.overflowMode = TextOverflowModes.Overflow;
-            return textMeshProUGUI;
-        }
-
-
         private static void Replace(CarePackageContainer container, CarePackagePanel.CarePackageOption option)
         {
             if (container == null || option == null || option.info == null)
