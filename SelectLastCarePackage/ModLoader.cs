@@ -9,6 +9,7 @@ namespace laz_yh.SelectLastCarePackage
     public class ModLoader : UserMod2
     {
         internal static bool Patches2 = true;
+        static Dictionary<string, string> translations;
         public override void OnLoad(Harmony harmony)
         {
 
@@ -19,6 +20,7 @@ namespace laz_yh.SelectLastCarePackage
 #else
             Localization.RegisterForTranslation(typeof(Languages));
 #endif
+            global::Commons.Translation_Patch.TryLoadTranslations(this, out translations);
 
         }
 
@@ -27,17 +29,17 @@ namespace laz_yh.SelectLastCarePackage
             if ( !ModUtils.HasModbydlc(mods, new List<string>() {"2856555858"}))
             {
                 ManualPatch.ManualPatch_NS("laz_yh.SelectLastCarePackage.Patches2");
-                Debug.Log("[×îºóµÄ²¹¸ø°ü-Fix] Ë¢ĞÂ°´Å¥ÆôÓÃ");
+                Debug.Log("[æœ€åçš„è¡¥ç»™åŒ…-Fix] åˆ·æ–°æŒ‰é’®å¯ç”¨");
             }
 
             else
             {
                 Patches2 = false;
-                Debug.LogFormat("[×îºóµÄ²¹¸ø°ü-Fix] Ë¢ĞÂ°´Å¥°´Å¥±»mod_workshop_id: {0} ÆôÓÃ", "2856555858");
+                Debug.LogFormat("[æœ€åçš„è¡¥ç»™åŒ…-Fix] åˆ·æ–°æŒ‰é’®æŒ‰é’®è¢«mod_workshop_id: {0} å¯ç”¨", "2856555858");
             }
             foreach (MethodBase method in harmony.GetPatchedMethods())
             {
-                Debug.LogFormat("[×îºóµÄ²¹¸ø°ü-Fix] ĞŞ²¹ÁË£º{0}.{1}", method.DeclaringType.FullName, method.Name);
+                Debug.LogFormat("[æœ€åçš„è¡¥ç»™åŒ…-Fix] ä¿®è¡¥äº†ï¼š{0}.{1}", method.DeclaringType.FullName, method.Name);
             }
         }
     }

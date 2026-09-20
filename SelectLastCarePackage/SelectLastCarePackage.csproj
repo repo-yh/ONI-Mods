@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="strings\templates.pot">
+    <None Update="Translations\templates.pot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="strings\zh_CN.po">
+    <None Update="Translations\zh.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

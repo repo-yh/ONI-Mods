@@ -10,49 +10,49 @@ namespace Unlock_Cheat
             {
                 public class MUTATOR
                 {
-                    public static LocString NAME = "±äÒì";
+                    public static LocString NAME = "å˜å¼‚";
 
-                    public static LocString TOOLTIP = "½«ÖÖ×Ó»òÖ²ÎïËæ»ú±äÒì.";
+                    public static LocString TOOLTIP = "å°†ç§å­æˆ–æ¤ç‰©éšæœºå˜å¼‚.";
                 }
 
                 public class IDENTIFY_MUTATION
                 {
-                    public static LocString NAME = "·ÖÎö";
+                    public static LocString NAME = "åˆ†æ";
 
-                    public static LocString TOOLTIP = "·ÖÎöÖÖ×Ó²»ĞèÒª" + STRINGS.UI.FormatAsLink("Ö²Îï·ÖÎöÒÇ", "GENETICANALYSISSTATION");
+                    public static LocString TOOLTIP = "åˆ†æç§å­ä¸éœ€è¦" + STRINGS.UI.FormatAsLink("æ¤ç‰©åˆ†æä»ª", "GENETICANALYSISSTATION");
                 }
                 public class HARVEST_WHEN_READY
                 {
-                    public static LocString NAME = "ÆôÓÃ¸´ÖÆÈËÊÕ»ñ";
+                    public static LocString NAME = "å¯ç”¨å¤åˆ¶äººæ”¶è·";
 
-                    public static LocString TOOLTIP = "µ±ÕâÖêÖ²Îï³ÉÊìÊ±£¬¸´ÖÆÈË»áÊÕ»ñ,È¡Ïû×Ô¶¯ÊÕ»ñ";
+                    public static LocString TOOLTIP = "å½“è¿™æ ªæ¤ç‰©æˆç†Ÿæ—¶ï¼Œå¤åˆ¶äººä¼šæ”¶è·,å–æ¶ˆè‡ªåŠ¨æ”¶è·";
 
-                    public static LocString PLANT_DO_NOT_SELFHARVEST = "½ûÓÃ×Ô¶¯µôÂä(ĞèÒª±£´æ¼ÓÔØÉúĞ§)";
+                    public static LocString PLANT_DO_NOT_SELFHARVEST = "ç¦ç”¨è‡ªåŠ¨æ‰è½(éœ€è¦ä¿å­˜åŠ è½½ç”Ÿæ•ˆ)";
 
-                    public static LocString Reload = "ĞèÒª±£´æ¼ÓÔØÉúĞ§";
+                    public static LocString Reload = "éœ€è¦ä¿å­˜åŠ è½½ç”Ÿæ•ˆ";
 
                 }
                 public class CANCEL_HARVEST_WHEN_READY
                 {
-                    public static LocString NAME = "½ûÓÃ¸´ÖÆÈËÊÕ»ñ";
+                    public static LocString NAME = "ç¦ç”¨å¤åˆ¶äººæ”¶è·";
 
-                    public static LocString TOOLTIP = "¸´ÖÆÈË²»×Ô¶¯ÊÕ»ñÕâÖêÖ²Îï,¸ÄÎª³ÉÊìºó×Ô¶¯µôÂä";
+                    public static LocString TOOLTIP = "å¤åˆ¶äººä¸è‡ªåŠ¨æ”¶è·è¿™æ ªæ¤ç‰©,æ”¹ä¸ºæˆç†Ÿåè‡ªåŠ¨æ‰è½";
 
-                    public static LocString PLANT_SELFHARVEST = "ÆôÓÃ×Ô¶¯µôÂä";
+                    public static LocString PLANT_SELFHARVEST = "å¯ç”¨è‡ªåŠ¨æ‰è½";
 
                 }
                 public class SELFHARVEST
                 {
-                    public static LocString NAME = "ÆôÓÃÖ²Îï×Ô¶¯ÊÕ»ñ";
+                    public static LocString NAME = "å¯ç”¨æ¤ç‰©è‡ªåŠ¨æ”¶è·";
 
-                    public static LocString MutationNAME = "Ö²Îï×Ô¶¯ÊÕ»ñ";
+                    public static LocString MutationNAME = "æ¤ç‰©è‡ªåŠ¨æ”¶è·";
 
 
-                    public static LocString TOOLTIP = "Ö²Îï³ÉÊìÊ±×Ô¶¯µôÂä";
+                    public static LocString TOOLTIP = "æ¤ç‰©æˆç†Ÿæ—¶è‡ªåŠ¨æ‰è½";
 
-                    public static LocString CANCEL_NAME = "½ûÓÃÖ²Îï×Ô¶¯ÊÕ»ñ";
+                    public static LocString CANCEL_NAME = "ç¦ç”¨æ¤ç‰©è‡ªåŠ¨æ”¶è·";
 
-                    public static LocString CANCEL_TOOLTIP = "Ö²Îï³ÉÊìÊ±²»»á×Ô¶¯µôÂä(ÇĞ»»×´Ì¬ºóĞèÒª±£´æ¼ÓÔØÒ»´Î)";
+                    public static LocString CANCEL_TOOLTIP = "æ¤ç‰©æˆç†Ÿæ—¶ä¸ä¼šè‡ªåŠ¨æ‰è½(åˆ‡æ¢çŠ¶æ€åéœ€è¦ä¿å­˜åŠ è½½ä¸€æ¬¡)";
 
 
                 }
@@ -60,15 +60,15 @@ namespace Unlock_Cheat
             public class USERTEXT
             {
 
-                public static LocString NO_OWNED = "Õâ¸öÆ¤·ôÄãÔİÎ´ÓµÓĞ,Ö»ÓĞÊ¹ÓÃÈ¨";
-                public static LocString LAST_OWNED = "Õâ¸öÆ¤·ôÊıÁ¿ÊÇÄãÓµÓĞµÄ<color=#ff0000ff>×îºóµÄÒ»¼ş</color>£¬·Ö½âºó¾ÍÃ»ÓĞÁË";
+                public static LocString NO_OWNED = "è¿™ä¸ªçš®è‚¤ä½ æš‚æœªæ‹¥æœ‰,åªæœ‰ä½¿ç”¨æƒ";
+                public static LocString LAST_OWNED = "è¿™ä¸ªçš®è‚¤æ•°é‡æ˜¯ä½ æ‹¥æœ‰çš„<color=#ff0000ff>æœ€åçš„ä¸€ä»¶</color>ï¼Œåˆ†è§£åå°±æ²¡æœ‰äº†";
             }
 
             public class NUCLEARRESEARCHCENTER
             {
 
-                public static LocString TITLE = "·øÉäÁ£×Ó´æ´¢Öµ";
-                public static LocString TOOLTIP = "µ±Ç°ÄÜ´¢´æ<b>{0}</b><style=\"KKeyword\">·øÉäÁ£×Ó</style>";
+                public static LocString TITLE = "è¾å°„ç²’å­å­˜å‚¨å€¼";
+                public static LocString TOOLTIP = "å½“å‰èƒ½å‚¨å­˜<b>{0}</b><style=\"KKeyword\">è¾å°„ç²’å­</style>";
             }
 
         }

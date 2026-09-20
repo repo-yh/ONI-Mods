@@ -1,7 +1,11 @@
 using HarmonyLib;
 using KSerialization;
+using SelectLastCarePackage.CarePackagePanel;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 namespace laz_yh.SelectLastCarePackage
 {
@@ -62,7 +66,7 @@ namespace laz_yh.SelectLastCarePackage
                     }
                     else if (item is CarePackageContainer carePackageContainer)
                     {
-                        //global::Debug.Log("CarePackageContainer£º"+ carePackageContainer.Info.id);
+                        //global::Debug.Log("CarePackageContainerï¼š"+ carePackageContainer.Info.id);
 
                         if (selectedDeliverables.Contains(carePackageContainer.carePackageInstanceData))
                         {
@@ -80,7 +84,7 @@ namespace laz_yh.SelectLastCarePackage
             }
             else {
 
-                global::Debug.Log("ÆäËûcontainersÃ»ÓÐÕÒµ½±»Ñ¡ÖÐµÄ");
+                global::Debug.Log("å…¶ä»–containersæ²¡æœ‰æ‰¾åˆ°è¢«é€‰ä¸­çš„");
 
             }
 
@@ -124,24 +128,53 @@ namespace laz_yh.SelectLastCarePackage
                     else if (c is CarePackageContainer carePackageContainer)
                     {
 
-                        carePackageContainer.SetReshufflingState(true);
+                        // carePackageContainer.SetReshufflingState(true);
+                        KButton reshuffleButton = Traverse.Create(carePackageContainer).Field("reshuffleButton").GetValue<KButton>();
+                        //Traverse.Create(carePackageContainer).Field("reshuffleButton").Field("onClick").SetValue(new System.Action(delegate
+                        //{
 
-                        Traverse.Create(carePackageContainer).Field("reshuffleButton").Field("onClick").SetValue(new System.Action(delegate
+                        //    ImmigrantScreenMethod.Reshuffle(carePackageContainer);
+
+                        //}));
+
+                        KButton kbutton = Util.KInstantiateUI<KButton>(reshuffleButton.gameObject, reshuffleButton.transform.parent.gameObject, true);
+                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 0f, 120f);
+
+                        LocText text = kbutton.transform.GetComponentInChildren<LocText>();
+                        if (text != null)
                         {
+                            if (!text.enabled)
+                            {
+                                text.enabled = true;
+                            }
+                            if (!text.gameObject.activeSelf)
+                            {
+                                text.gameObject.SetActive(true);
+                            }
+                            text.key = string.Empty;
 
-                            ImmigrantScreenMethod.Reshuffle(carePackageContainer);
+                            text.alignment = TextAlignmentOptions.MidlineLeft;
 
-                        }));
+                            text.textWrappingMode = TextWrappingModes.NoWrap;
+                            text.enableAutoSizing = true;
+                            text.fontSizeMin = 10f;
+                            text.fontSizeMax = 14f;
+                            text.SetText(Languages.MANUALSELECTCAREPACKAGE);
+                        }
+
+                        kbutton.onClick += delegate ()
+                        {
+                            CarePackagePanel.Show(true, carePackageContainer);
+                        };
                     }
 
 
 
-               
+
                 }
 
             );
 
-                //    Debug.Log("Ë¢ÐÂ°´Å¥Éú³É");
             }
 
 

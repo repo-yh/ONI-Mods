@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not Included"
+"POT Version: 2.0"
+
+#. laz_yh.SelectLastCarePackage.Languages.REROLL
+msgctxt "laz_yh.SelectLastCarePackage.Languages.REROLL"
+msgid "REROLL"
+msgstr ""
+
+#. laz_yh.SelectLastCarePackage.Languages.MANUALSELECTCAREPACKAGE
+msgctxt "laz_yh.SelectLastCarePackage.Languages.MANUALSELECTCAREPACKAGE"
+msgid "ManualSelect"
+msgstr ""
+
+#. laz_yh.SelectLastCarePackage.Languages.SEARCH_HINT
+msgctxt "laz_yh.SelectLastCarePackage.Languages.SEARCH_HINT"
+msgid "Filter items"
+msgstr ""
+
+#. laz_yh.SelectLastCarePackage.Languages.BACK
+msgctxt "laz_yh.SelectLastCarePackage.Languages.BACK"
+msgid "Back"
+msgstr ""
+
+#. laz_yh.SelectLastCarePackage.Languages.TO_REPLACE
+msgctxt "laz_yh.SelectLastCarePackage.Languages.TO_REPLACE"
+msgid "Replace:"
+msgstr ""
