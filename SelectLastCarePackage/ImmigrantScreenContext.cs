@@ -138,7 +138,7 @@ namespace laz_yh.SelectLastCarePackage
                         //}));
 
                         KButton kbutton = Util.KInstantiateUI<KButton>(reshuffleButton.gameObject, reshuffleButton.transform.parent.gameObject, true);
-                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 200f, 140f);
+                        kbutton.rectTransform().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 0f, 120f);
 
                         LocText text = kbutton.transform.GetComponentInChildren<LocText>();
                         if (text != null)
@@ -155,7 +155,6 @@ namespace laz_yh.SelectLastCarePackage
 
                             text.alignment = TextAlignmentOptions.MidlineLeft;
 
-                            // 文字较长：禁用换行，在文本框内自动缩放字号，保证单行不超出按钮
                             text.textWrappingMode = TextWrappingModes.NoWrap;
                             text.enableAutoSizing = true;
                             text.fontSizeMin = 10f;
@@ -176,7 +175,6 @@ namespace laz_yh.SelectLastCarePackage
 
             );
 
-                //    Debug.Log("刷新按钮生成");
             }
 
 

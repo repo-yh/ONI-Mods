@@ -26,23 +26,29 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         public override void OnKeyDown(KButtonEvent e)
         {
-            if (!e.Consumed && e.TryConsume(global::Action.Escape))
+            bool flag = e.TryConsume(global::Action.Escape);
+            if (flag)
             {
-                CarePackagePanel.Close();
+                this.Close();
+                e.Consumed = true;
             }
-            e.Consumed = true;
+            else
+            {
+                base.OnKeyDown(e);
+            }
         }
-
-        public override void OnKeyUp(KButtonEvent e)
+        protected override void OnActivate()
         {
-            e.Consumed = true;
+            base.OnActivate();
+            if (instance._title != null)
+            {
+                instance._title.SetText(Languages.TO_REPLACE + " " + instance.GetCurrentContainer());
+            }
+            instance.ApplyFilter(string.Empty);
         }
-
         protected override void OnDeactivate()
         {
-            // Deactivate 流程第一步先手动隐藏根节点，再由基类继续 PopScreen + Destroy
-            gameObject.SetActive(false);
-            CarePackagePanel.instance = null;
+            base.OnDeactivate();
         }
         public static void Open(ImmigrantScreen target, CarePackageContainer container)
         {
@@ -52,7 +58,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 bool flag2 = CarePackagePanel.instance != null;
                 if (flag2)
                 {
-                    CarePackagePanel.Close();
+                    CarePackagePanel.instance.Close();
                     CarePackagePanel.instance = null;
                 }
                 GameObject gameObject = new GameObject("CarePackageUI", new Type[]
@@ -76,11 +82,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 
                 instance.BuildUI(gameObject, container);
 
-                if (instance._title != null)
-                {
-                    instance._title.SetText(Languages.TO_REPLACE + " " + instance.GetCurrentContainer());
-                }
-                instance.ApplyFilter(string.Empty);
+
                 instance.Activate();
 
                 //CarePackagePanel.instance.targetObject = target;
@@ -322,7 +324,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             button.transition = Selectable.Transition.None;
             button.onClick.AddListener(delegate ()
             {
-                CarePackagePanel.Close();
+                this.Close();
             });
         }
 
@@ -396,7 +398,7 @@ namespace SelectLastCarePackage.CarePackagePanel
         private void Select(CarePackagePanel.CarePackageOption option)
         {
            CarePackagePanel.Replace(this.Container, option);
-            CarePackagePanel.Close();
+            this.Close();
         }
         private static List<CarePackagePanel.CarePackageOption> BuildPackages()
         {
@@ -580,11 +582,15 @@ namespace SelectLastCarePackage.CarePackagePanel
         }
 
 
-        public static void Close()
+        public  void Close()
         {
+            gameObject.SetActive(false);
+            this.Deactivate();
+
             if (CarePackagePanel.instance != null && CarePackagePanel.instance.gameObject != null)
             {
-                CarePackagePanel.instance.Deactivate();
+                UnityEngine.Object.Destroy(CarePackagePanel.instance.gameObject);
+
             }
             CarePackagePanel.instance = null;
         }
