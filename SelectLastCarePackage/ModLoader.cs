@@ -9,6 +9,7 @@ namespace laz_yh.SelectLastCarePackage
     public class ModLoader : UserMod2
     {
         internal static bool Patches2 = true;
+        static Dictionary<string, string> translations;
         public override void OnLoad(Harmony harmony)
         {
 
@@ -19,6 +20,7 @@ namespace laz_yh.SelectLastCarePackage
 #else
             Localization.RegisterForTranslation(typeof(Languages));
 #endif
+            global::Commons.Translation_Patch.TryLoadTranslations(this, out translations);
 
         }
 

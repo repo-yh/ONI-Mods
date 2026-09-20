@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+#. laz_yh.SelectLastCarePackage.Languages.REROLL
+msgctxt "laz_yh.SelectLastCarePackage.Languages.REROLL"
+msgid "REROLL"
+msgstr "再来亿次"
+
+#. laz_yh.SelectLastCarePackage.Languages.MANUALSELECTCAREPACKAGE
+msgctxt "laz_yh.SelectLastCarePackage.Languages.MANUALSELECTCAREPACKAGE"
+msgid "ManualSelect"
+msgstr "手动选择"
+
+#. laz_yh.SelectLastCarePackage.Languages.SEARCH_HINT
+msgctxt "laz_yh.SelectLastCarePackage.Languages.SEARCH_HINT"
+msgid "Filter items"
+msgstr "筛选物品"
+
+#. laz_yh.SelectLastCarePackage.Languages.BACK
+msgctxt "laz_yh.SelectLastCarePackage.Languages.BACK"
+msgid "Back"
+msgstr "返回"
+
+#. laz_yh.SelectLastCarePackage.Languages.TO_REPLACE
+msgctxt "laz_yh.SelectLastCarePackage.Languages.TO_REPLACE"
+msgid "Replace:"
+msgstr "替换："
