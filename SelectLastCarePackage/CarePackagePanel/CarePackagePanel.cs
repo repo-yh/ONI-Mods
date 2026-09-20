@@ -16,18 +16,33 @@ using static STRINGS.UI.STARMAP;
 
 namespace SelectLastCarePackage.CarePackagePanel
 {
-    public class CarePackagePanel : KMonoBehaviour
+    public class CarePackagePanel : KScreen
     {
-
-        private void Update()
+        // 排到输入栈顶（CarePackageContainer 的 GetSortKey 是 50 且会消费按键），优先接收 Esc 等按键
+        public override float GetSortKey()
         {
+            return MODAL_SCREEN_SORT_KEY;
+        }
 
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+        public override void OnKeyDown(KButtonEvent e)
+        {
+            if (!e.Consumed && e.TryConsume(global::Action.Escape))
             {
                 CarePackagePanel.Close();
             }
-            Debug.Log("6666");
+            e.Consumed = true;
+        }
+
+        public override void OnKeyUp(KButtonEvent e)
+        {
+            e.Consumed = true;
+        }
+
+        protected override void OnDeactivate()
+        {
+            // Deactivate 流程第一步先手动隐藏根节点，再由基类继续 PopScreen + Destroy
+            gameObject.SetActive(false);
+            CarePackagePanel.instance = null;
         }
         public static void Open(ImmigrantScreen target, CarePackageContainer container)
         {
@@ -56,6 +71,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 
                 instance =  gameObject.AddComponent<CarePackagePanel>();
                 instance.Container = container;
+                instance.ConsumeMouseScroll = true;
 
 
                 instance.BuildUI(gameObject, container);
@@ -65,6 +81,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                     instance._title.SetText(Languages.TO_REPLACE + " " + instance.GetCurrentContainer());
                 }
                 instance.ApplyFilter(string.Empty);
+                instance.Activate();
 
                 //CarePackagePanel.instance.targetObject = target;
                 //CarePackagePanel.instance.rootCanvas = gameObject;
@@ -567,7 +584,7 @@ namespace SelectLastCarePackage.CarePackagePanel
         {
             if (CarePackagePanel.instance != null && CarePackagePanel.instance.gameObject != null)
             {
-                UnityEngine.Object.Destroy(CarePackagePanel.instance.gameObject);
+                CarePackagePanel.instance.Deactivate();
             }
             CarePackagePanel.instance = null;
         }
