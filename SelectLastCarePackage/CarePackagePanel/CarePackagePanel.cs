@@ -200,30 +200,80 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component3.anchorMax = Vector2.one;
                 component3.offsetMin = new Vector2(6f, 2f);
                 component3.offsetMax = new Vector2(-6f, -2f);
-                TMP_Text tmp_Text = CarePackagePanel.MakeText(gameObject2.transform, "Hint", 16f);
-                TMP_Text tmp_Text2 = CarePackagePanel.MakeText(gameObject2.transform, "Text", 16f);
-                if (tmp_Text2 != null)
+                // 优先克隆游戏现成的搜索输入框（含未激活的侧边屏实例），样式与行为与本体一致
+                KInputTextField inputField = null;
+                KInputTextField[] all = Resources.FindObjectsOfTypeAll<KInputTextField>();
+                foreach (KInputTextField item in all)
                 {
-                    tmp_Text2.color = Color.white;
-                    RectTransform rectTransform = tmp_Text2.rectTransform;
-                    rectTransform.anchorMin = Vector2.zero;
-                    rectTransform.anchorMax = Vector2.one;
-                    rectTransform.offsetMin = Vector2.zero;
-                    rectTransform.offsetMax = Vector2.zero;
-                    tmp_Text2.alignment = TextAlignmentOptions.MidlineLeft;
+                    if (item != null && item.gameObject.scene.IsValid())
+                    {
+                        inputField = Util.KInstantiateUI<KInputTextField>(item.gameObject, gameObject2, true);
+                        break;
+                    }
                 }
-                if (tmp_Text != null)
+                if (inputField != null)
                 {
-                    tmp_Text.color = new Color(1f, 1f, 1f, 0.4f);
-                    RectTransform rectTransform2 = tmp_Text.rectTransform;
-                    rectTransform2.anchorMin = Vector2.zero;
-                    rectTransform2.anchorMax = Vector2.one;
-                    rectTransform2.offsetMin = Vector2.zero;
-                    rectTransform2.offsetMax = Vector2.zero;
-                    tmp_Text.alignment = TextAlignmentOptions.MidlineLeft;
-                    tmp_Text.SetText(Languages.SEARCH_HINT);
+                    RectTransform rectTransform3 = inputField.rectTransform();
+                    rectTransform3.anchorMin = Vector2.zero;
+                    rectTransform3.anchorMax = Vector2.one;
+                    rectTransform3.offsetMin = Vector2.zero;
+                    rectTransform3.offsetMax = Vector2.zero;
+                    TMP_Text placeholder = inputField.placeholder as TMP_Text;
+                    if (placeholder != null)
+                    {
+                        placeholder.SetText(Languages.SEARCH_HINT);
+                    }
                 }
-                gameObject2.AddComponent<CarePackagePanel.SearchTyping>().Setup(tmp_Text2, new Action<string>(this.ApplyFilter));
+                else
+                {
+                    // 回退：纯代码组装 KInputTextField
+                    GameObject textArea = new GameObject("Text Area", new Type[]
+                    {
+                            typeof(RectTransform),
+                            typeof(RectMask2D)
+                    });
+                    textArea.transform.SetParent(gameObject2.transform, false);
+                    RectTransform component4 = textArea.GetComponent<RectTransform>();
+                    component4.anchorMin = Vector2.zero;
+                    component4.anchorMax = Vector2.one;
+                    component4.offsetMin = Vector2.zero;
+                    component4.offsetMax = Vector2.zero;
+                    TMP_Text tmp_Text = CarePackagePanel.MakeText(textArea.transform, "Placeholder", 16f);
+                    TMP_Text tmp_Text2 = CarePackagePanel.MakeText(textArea.transform, "Text", 16f);
+                    if (tmp_Text2 != null)
+                    {
+                        tmp_Text2.color = Color.white;
+                        RectTransform rectTransform = tmp_Text2.rectTransform;
+                        rectTransform.anchorMin = Vector2.zero;
+                        rectTransform.anchorMax = Vector2.one;
+                        rectTransform.offsetMin = Vector2.zero;
+                        rectTransform.offsetMax = Vector2.zero;
+                        tmp_Text2.alignment = TextAlignmentOptions.MidlineLeft;
+                    }
+                    if (tmp_Text != null)
+                    {
+                        tmp_Text.color = new Color(1f, 1f, 1f, 0.4f);
+                        RectTransform rectTransform2 = tmp_Text.rectTransform;
+                        rectTransform2.anchorMin = Vector2.zero;
+                        rectTransform2.anchorMax = Vector2.one;
+                        rectTransform2.offsetMin = Vector2.zero;
+                        rectTransform2.offsetMax = Vector2.zero;
+                        tmp_Text.alignment = TextAlignmentOptions.MidlineLeft;
+                        tmp_Text.SetText(Languages.SEARCH_HINT);
+                    }
+                    inputField = gameObject2.AddComponent<KInputTextField>();
+                    inputField.textViewport = component4;
+                    inputField.textComponent = tmp_Text2;
+                    inputField.placeholder = tmp_Text;
+                    inputField.text = string.Empty;
+                }
+                if (inputField != null)
+                {
+                    inputField.onValueChanged.AddListener(delegate (string value)
+                    {
+                        this.ApplyFilter(value);
+                    });
+                }
             }
             catch (Exception)
             {
@@ -651,129 +701,6 @@ namespace SelectLastCarePackage.CarePackagePanel
         public List<CarePackagePanel.CarePackageOption> All = new List<CarePackagePanel.CarePackageOption>();
 
         private readonly Dictionary<CarePackageInfo, GameObject> _rows = new Dictionary<CarePackageInfo, GameObject>();
-
-        public class SearchTyping : KMonoBehaviour
-        {
-            // Token: 0x0600002C RID: 44 RVA: 0x00002F34 File Offset: 0x00001134
-            public void Setup(TMP_Text text, Action<string> onChanged)
-            {
-                this._text = text;
-                this._onChanged = onChanged;
-                this._rect = base.GetComponent<RectTransform>();
-                GameObject gameObject = new GameObject("Caret", new Type[]
-                {
-                    typeof(RectTransform),
-                    typeof(CanvasRenderer),
-                    typeof(Image)
-                });
-                gameObject.transform.SetParent(base.transform, false);
-                this._caretImage = gameObject.GetComponent<Image>();
-                this._caretImage.color = Color.white;
-                this._caretImage.raycastTarget = false;
-                this._caret = gameObject.GetComponent<RectTransform>();
-                this._caret.anchorMin = new Vector2(0f, 0f);
-                this._caret.anchorMax = new Vector2(0f, 1f);
-                this._caret.pivot = new Vector2(0f, 0.5f);
-                this._caret.sizeDelta = new Vector2(1.5f, -6f);
-                this._caret.anchoredPosition = new Vector2(2f, 0f);
-                this._caret.gameObject.SetActive(false);
-            }
-
-            private void Update()
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    bool editing = this._rect != null && RectTransformUtility.RectangleContainsScreenPoint(this._rect, Input.mousePosition, null);
-                    this.SetEditing(editing);
-
-                }
-                if (this._caret == null || !this._caret.gameObject.activeSelf)
-                {
-                    return;
-                }
-                string inputString = Input.inputString;
-                if (!string.IsNullOrEmpty(inputString))
-                {
-                    foreach (char c in inputString)
-                    {
-                        if (c == '\b')
-                        {
-                            if (this._value.Length > 0)
-                            {
-                                this._value = this._value.Substring(0, this._value.Length - 1);
-                            }
-                        }
-                        else if (c != '\n' && c != '\r')
-                        {
-                            this._value += c.ToString();
-                        }
-                    }
-                    this.Refresh();
-                }
-                this._blink += Time.unscaledDeltaTime;
-                if (this._caretImage != null)
-                {
-                    this._caretImage.color = new Color(1f, 1f, 1f, (this._blink % 1f < 0.5f) ? 1f : 0f);
-                }
-            }
-
-            // Token: 0x0600002E RID: 46 RVA: 0x000031B4 File Offset: 0x000013B4
-            private void SetEditing(bool on)
-            {
-                if (this._caret == null)
-                {
-                    return;
-                }
-                if (this._caret.gameObject.activeSelf == on)
-                {
-                    return;
-                }
-                this._caret.gameObject.SetActive(on);
-                this._blink = 0f;
-                Input.imeCompositionMode = (on ? IMECompositionMode.On : IMECompositionMode.Auto);
-            }
-
-            // Token: 0x0600002F RID: 47 RVA: 0x0000320C File Offset: 0x0000140C
-            private void Refresh()
-            {
-                if (this._text != null)
-                {
-                    this._text.SetText(this._value);
-                }
-                if (this._onChanged != null)
-                {
-                    this._onChanged(this._value);
-                }
-            }
-
-            // Token: 0x06000030 RID: 48 RVA: 0x00003246 File Offset: 0x00001446
-            private new void OnDisable()
-            {
-                Input.imeCompositionMode = IMECompositionMode.Auto;
-            }
-
-            // Token: 0x0400000F RID: 15
-            private TMP_Text _text;
-
-            // Token: 0x04000010 RID: 16
-            private Action<string> _onChanged;
-
-            // Token: 0x04000011 RID: 17
-            private string _value = string.Empty;
-
-            // Token: 0x04000012 RID: 18
-            private RectTransform _rect;
-
-            // Token: 0x04000013 RID: 19
-            private RectTransform _caret;
-
-            // Token: 0x04000014 RID: 20
-            private Image _caretImage;
-
-            // Token: 0x04000015 RID: 21
-            private float _blink;
-        }
-
 
         public class CarePackageOption
         {
