@@ -332,28 +332,9 @@ namespace SelectLastCarePackage.CarePackagePanel
             {
                 // 克隆原版关闭按钮：自带 X 图标、文字与 KButton 主题（含悬停变色）
                 gameObject = Util.KInstantiateUI(srcClose.gameObject, transform.gameObject, true);
-                RectTransform rectTransform = gameObject.rectTransform();
-                float width = rectTransform.rect.width;
-                float height = rectTransform.rect.height;
-                if (width <= 0f)
-                {
-                    width = 30f;
-                }
-                if (height <= 0f)
-                {
-                    height = 30f;
-                }
-                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 8f, width);
-                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 8f, height);
-
-                ToolTip ToolTip = gameObject.GetComponent<ToolTip>();
-
-                Canvas canvas  = ToolTip.gameObject.GetComponentInParent<Canvas>();
-
-                Canvas canvas1 = srcClose.gameObject.GetComponentInParent<Canvas>();
-                Debug.Log("[ToolTip]" + canvas.sortingOrder + " " + canvas.name + " " + canvas.sortingLayerName);
-                Debug.Log("[srcClose]" + canvas1.sortingOrder + " " + canvas1.name + " " + canvas1.sortingLayerName);
-
+                ToolTip toolTip = gameObject.GetComponent<ToolTip>();
+                DestroyImmediate(toolTip);
+                KleiItemsUI.ConfigureTooltipOn(gameObject, STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
                 // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
                 KButton kButton = gameObject.GetComponent<KButton>();
                 kButton.ClearOnClick();
