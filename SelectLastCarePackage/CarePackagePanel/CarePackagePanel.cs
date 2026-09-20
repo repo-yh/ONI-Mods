@@ -41,7 +41,11 @@ namespace SelectLastCarePackage.CarePackagePanel
         protected override void OnDeactivate()
         {
             // Deactivate 流程第一步先手动隐藏根节点，再由基类继续 PopScreen + Destroy
-            gameObject.SetActive(false);
+            // 对象可能已被连带销毁（Unity 假 null，如 ImmigrantScreen 销毁链路/退出清理），需判空
+            if (gameObject != null)
+            {
+                gameObject.SetActive(false);
+            }
             CarePackagePanel.instance = null;
         }
         public static void Open(ImmigrantScreen target, CarePackageContainer container)
@@ -83,7 +87,6 @@ namespace SelectLastCarePackage.CarePackagePanel
                 instance.ApplyFilter(string.Empty);
                 instance.Activate();
 
-                //CarePackagePanel.instance.targetObject = target;
                 //CarePackagePanel.instance.rootCanvas = gameObject;
                 //CarePackagePanel.instance.Activate();
             }
@@ -151,7 +154,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private void BuildTitle(Transform transform)
         {
-            this._title = CarePackagePanel.MakeText(transform, "Title", 18f);
+            this._title = MakeText(transform, "Title", 18f);
             if (this._title == null)
             {
                 return;
@@ -166,7 +169,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             this._title.color = new Color(0.75f, 0.88f, 1f, 1f);
         }
 
-        // Token: 0x06000035 RID: 53 RVA: 0x00003584 File Offset: 0x00001784
         private void BuildSearchBar(Transform transform)
         {
             try
@@ -238,8 +240,8 @@ namespace SelectLastCarePackage.CarePackagePanel
                     component4.anchorMax = Vector2.one;
                     component4.offsetMin = Vector2.zero;
                     component4.offsetMax = Vector2.zero;
-                    TMP_Text tmp_Text = CarePackagePanel.MakeText(textArea.transform, "Placeholder", 16f);
-                    TMP_Text tmp_Text2 = CarePackagePanel.MakeText(textArea.transform, "Text", 16f);
+                    TMP_Text tmp_Text = MakeText(textArea.transform, "Placeholder", 16f);
+                    TMP_Text tmp_Text2 = MakeText(textArea.transform, "Text", 16f);
                     if (tmp_Text2 != null)
                     {
                         tmp_Text2.color = Color.white;
@@ -280,7 +282,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
         }
 
-        // Token: 0x06000036 RID: 54 RVA: 0x0000384C File Offset: 0x00001A4C
         private void BuildList(Transform transform)
         {
             GameObject gameObject = new GameObject("Scroll", new Type[]
@@ -340,40 +341,85 @@ namespace SelectLastCarePackage.CarePackagePanel
             scrollRect.content = this._content;
         }
 
-        // Token: 0x06000037 RID: 55 RVA: 0x00003AF8 File Offset: 0x00001CF8
         private void BuildCloseButton(Transform transform)
         {
-            GameObject gameObject = new GameObject("Close", new Type[]
+            Transform srcClose = (ImmigrantScreen.instance != null) ? ImmigrantScreen.instance.transform.Find("Layout/Title/CloseButton") : null;
+            GameObject gameObject = null;
+            if (srcClose != null)
             {
-                    typeof(RectTransform),
-                    typeof(CanvasRenderer),
-                    typeof(Image)
-            });
-            gameObject.transform.SetParent(transform, false);
-            RectTransform component = gameObject.GetComponent<RectTransform>();
-            component.anchorMin = new Vector2(0.5f, 0f);
-            component.anchorMax = new Vector2(0.5f, 0f);
-            component.pivot = new Vector2(0.5f, 0f);
-            component.sizeDelta = new Vector2(170f, 30f);
-            component.anchoredPosition = new Vector2(0f, 8f);
-            gameObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.16f);
-            TMP_Text tmp_Text = CarePackagePanel.MakeText(gameObject.transform, "Label", 17f);
-            if (tmp_Text != null)
-            {
-                tmp_Text.SetText(Languages.BACK);
-                RectTransform rectTransform = tmp_Text.rectTransform;
-                rectTransform.anchorMin = Vector2.zero;
-                rectTransform.anchorMax = Vector2.one;
-                rectTransform.offsetMin = Vector2.zero;
-                rectTransform.offsetMax = Vector2.zero;
-                tmp_Text.alignment = TextAlignmentOptions.Center;
+                // 克隆原版关闭按钮：自带 X 图标、文字与 KButton 主题（含悬停变色）
+                gameObject = Util.KInstantiateUI(srcClose.gameObject, transform.gameObject, true);
+                RectTransform rectTransform = gameObject.rectTransform();
+                float width = rectTransform.rect.width;
+                float height = rectTransform.rect.height;
+                if (width <= 0f)
+                {
+                    width = 30f;
+                }
+                if (height <= 0f)
+                {
+                    height = 30f;
+                }
+                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, 8f, width);
+                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 8f, height);
             }
-            Button button = gameObject.AddComponent<Button>();
-            button.transition = Selectable.Transition.None;
-            button.onClick.AddListener(delegate ()
+            else
             {
-                CarePackagePanel.Close();
-            });
+                // 回退：原版按钮找不到时按旧方式纯代码组装
+                gameObject = new GameObject("Close", new Type[]
+                {
+                        typeof(RectTransform),
+                        typeof(CanvasRenderer),
+                        typeof(Image)
+                });
+                gameObject.transform.SetParent(transform, false);
+                RectTransform component = gameObject.GetComponent<RectTransform>();
+                component.anchorMin = new Vector2(0.5f, 0f);
+                component.anchorMax = new Vector2(0.5f, 0f);
+                component.pivot = new Vector2(0.5f, 0f);
+                component.sizeDelta = new Vector2(170f, 30f);
+                component.anchoredPosition = new Vector2(0f, 8f);
+                gameObject.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.16f);
+                TMP_Text tmp_Text = MakeText(gameObject.transform, "Label", 17f);
+                if (tmp_Text != null)
+                {
+                    tmp_Text.SetText(Languages.BACK);
+                    RectTransform rectTransform = tmp_Text.rectTransform;
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.one;
+                    rectTransform.offsetMin = Vector2.zero;
+                    rectTransform.offsetMax = Vector2.zero;
+                    tmp_Text.alignment = TextAlignmentOptions.Center;
+                }
+                Button button2 = gameObject.AddComponent<Button>();
+                button2.transition = Selectable.Transition.None;
+                button2.onClick.AddListener(delegate ()
+                {
+                    CarePackagePanel.Close();
+                });
+                return;
+            }
+            // 克隆体：Button 的 UnityEvent 可能携带 prefab 序列化的原版回调，先清空再绑自己的关闭逻辑
+            Button button = gameObject.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick = new Button.ButtonClickedEvent();
+            }
+            KButton kButton = gameObject.GetComponent<KButton>();
+            if (kButton != null)
+            {
+                kButton.onClick += delegate ()
+                {
+                    CarePackagePanel.Close();
+                };
+            }
+            else if (button != null)
+            {
+                button.onClick.AddListener(delegate ()
+                {
+                    CarePackagePanel.Close();
+                });
+            }
         }
 
 
@@ -419,7 +465,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 {
                     component3.sprite = captured.icon;
                 }
-                TMP_Text tmp_Text = CarePackagePanel.MakeText(gameObject.transform, "Label", 18f);
+                TMP_Text tmp_Text = MakeText(gameObject.transform, "Label", 18f);
                 if (tmp_Text != null)
                 {
                     tmp_Text.SetText(captured.displayName + "   " + captured.quantity);
@@ -500,7 +546,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
         }
 
-        // Token: 0x06000017 RID: 23 RVA: 0x00002954 File Offset: 0x00000B54
         private static string GetName(CarePackageInfo info)
         {
             GameObject prefab = Assets.GetPrefab(info.id);
@@ -523,7 +568,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
         }
 
-        // Token: 0x06000018 RID: 24 RVA: 0x000029D4 File Offset: 0x00000BD4
         private static string GetQuantity(CarePackageInfo info)
         {
             if (ElementLoader.FindElementByName(info.id) != null)
@@ -540,10 +584,14 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         public void ApplyFilter(string filter)
         {
-            string text = (filter ?? string.Empty).Trim().ToLowerInvariant();
+            // 名字匹配对齐游戏 TreeFilterableSideScreenRow.FilterAgainstSearch（StripLink + 双方 ToUpper 包含，空输入恒真全显示）；
+            // 额外保留 quantity / info.id 匹配，支持按数量和内部 id 检索
+            string search = (filter ?? string.Empty).ToUpper();
             foreach (CarePackagePanel.CarePackageOption carePackageOption in this.All)
             {
-                bool active = text.Length == 0 || CarePackagePanel.StripLink(carePackageOption.displayName).ToLowerInvariant().Contains(text) || carePackageOption.quantity.ToLowerInvariant().Contains(text) || carePackageOption.info.id.ToLowerInvariant().Contains(text);
+                bool active = CarePackagePanel.StripLink(carePackageOption.displayName).ToUpper().Contains(search)
+                    || carePackageOption.quantity.ToUpper().Contains(search)
+                    || carePackageOption.info.id.ToUpper().Contains(search);
                 GameObject gameObject;
                 if (this._rows.TryGetValue(carePackageOption.info, out gameObject) && gameObject != null)
                 {
@@ -560,7 +608,7 @@ namespace SelectLastCarePackage.CarePackagePanel
             }
             return Regex.Replace(s, "<[^>]*>", string.Empty);
         }
-        private static TMP_Text MakeText(Transform parent, string name, float size)
+        private TMP_Text MakeText(Transform parent, string name, float size)
         {
             GameObject gameObject = new GameObject(name, new Type[]
             {
@@ -611,12 +659,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             {
                 container.SelectDeliverable();
             }
-            SaveGame instance = SaveGame.Instance;
-            ImmigrantScreenContext immigrantScreenContext = (instance != null) ? instance.GetComponent<ImmigrantScreenContext>() : null;
-            if (immigrantScreenContext != null)
-            {
-                immigrantScreenContext.LastSelectedCarePackageInfo = option.info;
-            }
         }
 
         private static string RandomFacade(CarePackageInfo info)
@@ -642,7 +684,6 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private const string DEFAULT_FONT_TEXT = "NotoSansCJKsc-Regular";
 
-        // Token: 0x04000806 RID: 2054
         private const string DEFAULT_FONT_UI = "GRAYSTROKE REGULAR SDF";
 
         private static TMP_Text fontTemplate;
@@ -652,7 +693,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 
 
 
-        public static TMP_FontAsset Font
+        public TMP_FontAsset Font
         {
             get
             {
@@ -664,7 +705,7 @@ namespace SelectLastCarePackage.CarePackagePanel
                 Locale locale = Localization.GetLocale();
                 if (locale == null)
                 {
-                    font= Localization.GetFont(DEFAULT_FONT_TEXT);
+                    font = Localization.GetFont(DEFAULT_FONT_TEXT);
                 }
                 else
                 {
@@ -677,14 +718,12 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         private RectTransform _content;
 
-        // Token: 0x0400001A RID: 26
         private TMP_Text _title;
         private static bool cameraControlDisabled;
 
         private static CarePackagePanel instance;
 
         CarePackageContainer Container;
-        private GameObject targetObject;
 
         private GameObject listContent;
 
@@ -704,16 +743,12 @@ namespace SelectLastCarePackage.CarePackagePanel
 
         public class CarePackageOption
         {
-            // Token: 0x0400001B RID: 27
             public CarePackageInfo info;
 
-            // Token: 0x0400001C RID: 28
             public string displayName;
 
-            // Token: 0x0400001D RID: 29
             public string quantity;
 
-            // Token: 0x0400001E RID: 30
             public Sprite icon;
         }
     }
