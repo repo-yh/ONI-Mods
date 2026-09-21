@@ -57,14 +57,8 @@ namespace Unlock_Cheat.MutantPlants.CopySetting
 
         public override void OnDragComplete(Vector3 cursorDown, Vector3 cursorUp)
         {
-            if (sourceGameObject.GetComponent<CreatureBrain>() != null)
-                CopyCritterSettings();
             if (sourceGameObject.GetComponent<Uprootable>() != null)
                 CopyPlantSettings();
-            if (sourceGameObject.GetComponent<MinionIdentity>() != null)
-                CopyMinionSettings();
-            if (sourceGameObject.GetComponent<Geyser>() != null)
-                CopyGeyserSettings();
         }
 
         public override void OnLeftClickDown(Vector3 cursor_pos)
