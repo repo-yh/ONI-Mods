@@ -295,11 +295,11 @@ namespace SelectLastCarePackage.CarePackagePanel
             component.offsetMin = new Vector2(7f, 20f);
             component.offsetMax = new Vector2(-7f, -80f);
             gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.05f);
-            ScrollRect scrollRect = gameObject.AddComponent<ScrollRect>();
+            // 官方 KScrollRect：自带滚轮惯性（velocity 衰减）与 FMOD 滚动音效，OnScroll 不走原生 sensitivity
+            KScrollRect scrollRect = gameObject.AddComponent<KScrollRect>();
             scrollRect.horizontal = false;
             scrollRect.vertical = true;
-            scrollRect.movementType = ScrollRect.MovementType.Clamped;
-            scrollRect.scrollSensitivity = 30f;
+            scrollRect.movementType = ScrollRect.MovementType.Elastic;
             GameObject gameObject2 = new GameObject("Viewport", new Type[]
             {
                     typeof(RectTransform),
@@ -407,6 +407,10 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component.minHeight = 27f;
                 component.preferredHeight = 27f;
                 gameObject.GetComponent<Image>().color = Color.white;
+                // 黑色细边框区分行边界：Outline 复制顶点四向偏移画描边，超出行的 0.5px 落入行距形成分割线，无新增物体
+                Outline outline = gameObject.AddComponent<Outline>();
+                outline.effectColor = new Color(0f, 0f, 0f, 0.65f);
+                outline.effectDistance = new Vector2(0.5f, 0.5f);
                 GameObject gameObject2 = new GameObject("Icon", new Type[]
                 {
                         typeof(RectTransform),
