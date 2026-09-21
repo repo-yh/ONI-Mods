@@ -5,6 +5,7 @@ using PeterHan.PLib.Options;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Multiple_Power_Generator
 {
@@ -81,17 +82,32 @@ namespace Multiple_Power_Generator
             }
         }
 
-        [HarmonyPatch(typeof(BatteryUI), "SetContent")]
-        public class BatteryUI_SetContent
+        [HarmonyPatch(typeof(BatteryUI), "Initialize")]
+        public class BatteryUI_Initialize
         {
-            private static void Prefix(Battery bat, Dictionary<float, float> ___sizeMap)
+            private static bool init = false;
+            private static void Prefix(Dictionary<float, float> ___sizeMap)
             {
                 // 首次表为空时官方 Initialize 尚未填充，提前插入会占位导致官方三档丢失，直接跳过
-                if (___sizeMap == null || ___sizeMap.Count == 0)
+                if (init)
                 {
                     return;
                 }
-                ___sizeMap.TryAdd(bat.Capacity, 40f);
+                ___sizeMap = new Dictionary<float, float>();                
+                ___sizeMap.TryAdd(20000f * SingletonOptions<Options>.Instance.BatteryRatio, 10f);
+                ___sizeMap.TryAdd(40000f * SingletonOptions<Options>.Instance.BatteryRatio, 25f);
+                ___sizeMap.TryAdd(60000f * SingletonOptions<Options>.Instance.BatteryRatio, 40f);
+                init = false;
+            }
+        }
+        [HarmonyPatch(typeof(BatteryUI), "SetContent")]
+        public class BatteryUI_SetContent
+        {
+            private static void Postfix(Battery bat, Image ___batteryBG, Sprite ___bigBatteryBG, Sprite ___regularBatteryBG)
+            {
+                float limit = 40000f * SingletonOptions<Options>.Instance.BatteryRatio;
+
+                ___batteryBG.sprite = ((bat.Capacity >= limit) ? ___bigBatteryBG : ___regularBatteryBG);
             }
         }
 
