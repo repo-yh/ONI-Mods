@@ -86,8 +86,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 				{
 					typeof(RectTransform),
 					typeof(CanvasRenderer),
-					typeof(Image),
-					typeof(Canvas)
+					typeof(Image)
 				});
 
                 gameObject.transform.SetParent(target.transform, false);
@@ -128,14 +127,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             rectTransform.anchorMax = Vector2.one;
             rectTransform.offsetMin = Vector2.zero;
             rectTransform.offsetMax = Vector2.zero;
-            Canvas canvas = gameObject.GetComponent<Canvas>();
-            canvas.overrideSorting = true;
-            Canvas container_canvas = container.GetComponentInParent<Canvas>();
-            canvas.sortingOrder = ((container_canvas != null) ? container_canvas.sortingOrder : 0) + 3;
-
-
-
-            gameObject.AddComponent<GraphicRaycaster>();
 
             Image image = gameObject.GetComponent<Image>();
             image.color = new Color(0f, 0f, 0f, 0.55f);
@@ -331,18 +322,8 @@ namespace SelectLastCarePackage.CarePackagePanel
             if (srcClose != null)
             {
                 // 克隆原版关闭按钮：自带 X 图标、文字与 KButton 主题（含悬停变色）
+                // ToolTip 沿用克隆体自带实例（FixedStringKey 序列化在原版资产，激活时自动取本地化文字）
                 gameObject = Util.KInstantiateUI(srcClose.gameObject, transform.gameObject, true);
-                ToolTip toolTip = gameObject.GetComponent<ToolTip>();
-                DestroyImmediate(toolTip);
-                toolTip = gameObject.AddComponent<ToolTip>();
-                toolTip.tooltipPivot = new Vector2(0.5f, 0f);
-                toolTip.tooltipPositionOffset = new Vector2(0f, 10f);
-                toolTip.parentPositionAnchor = new Vector2(0.5f, 0.5f);
-                toolTip.toolTipPosition = ToolTip.TooltipPosition.Custom;
-                toolTip.SetSimpleTooltip(STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
-                toolTip.UseFixedStringKey=true;
-
-                //KleiItemsUI.ConfigureTooltipOn(gameObject, STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
                 // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
                 KButton kButton = gameObject.GetComponent<KButton>();
                 kButton.ClearOnClick();
