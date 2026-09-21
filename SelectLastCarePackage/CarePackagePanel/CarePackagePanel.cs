@@ -240,10 +240,34 @@ namespace SelectLastCarePackage.CarePackagePanel
                     rectTransform3.anchorMax = Vector2.one;
                     rectTransform3.offsetMin = Vector2.zero;
                     rectTransform3.offsetMax = Vector2.zero;
+                    inputField.text = string.Empty;
                     TMP_Text placeholder = inputField.placeholder as TMP_Text;
+                    if (placeholder == null && inputField.textComponent != null)
+                    {
+                        // 克隆源是 FindObjectsOfTypeAll 首个命中，可能没有占位词，代码组装一个
+                        GameObject gameObject4 = new GameObject("Placeholder", new Type[]
+                        {
+                                typeof(RectTransform)
+                        });
+                        gameObject4.transform.SetParent(inputField.textComponent.transform.parent, false);
+                        RectTransform component4 = gameObject4.GetComponent<RectTransform>();
+                        component4.anchorMin = Vector2.zero;
+                        component4.anchorMax = Vector2.one;
+                        component4.offsetMin = Vector2.zero;
+                        component4.offsetMax = Vector2.zero;
+                        TextMeshProUGUI component5 = gameObject4.AddComponent<TextMeshProUGUI>();
+                        component5.font = inputField.textComponent.font;
+                        component5.fontSize = inputField.textComponent.fontSize;
+                        component5.alignment = TextAlignmentOptions.Left;
+                        component5.raycastTarget = false;
+                        inputField.placeholder = component5;
+                        placeholder = component5;
+                    }
                     if (placeholder != null)
                     {
                         placeholder.SetText(Languages.SEARCH_HINT);
+                        placeholder.gameObject.SetActive(true);
+                        placeholder.color = new Color(1f, 1f, 1f, 0.4f);
                     }
                     inputField.onValueChanged.AddListener(delegate (string value)
                     {
