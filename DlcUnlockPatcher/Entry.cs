@@ -10,18 +10,12 @@ namespace DlcUnlockPatcher
     public static class Entry
 	{
         // Token: 0x06000003 RID: 3 RVA: 0x00002068 File Offset: 0x00000268
-        private static ResolveEventHandler _onAssemblyResolveHandler;
 
         public static void Run()
 		{
             try
             {
-                var currentDomain = AppDomain.CurrentDomain;
-                if (_onAssemblyResolveHandler == null)
-                {
-                    _onAssemblyResolveHandler = new ResolveEventHandler(OnAssemblyResolve);
-                }
-                currentDomain.AssemblyResolve += _onAssemblyResolveHandler;
+                AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(OnAssemblyResolve); ;
 
                 Patches.MatchId = Environment.GetEnvironmentVariable("YH_PATCH_MATCH_ID");
                 if (string.IsNullOrEmpty(Patches.MatchId))
