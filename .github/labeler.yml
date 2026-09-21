@@ -5,28 +5,28 @@
 code:
   - changed-files:
     - any-glob-to-any-file:
-      - '*.cs'
+      - '**/*.cs'
 
 
 project:
   - changed-files:
     - any-glob-to-any-file:
-      - '*.props'
-      - '*.targets'
-      - '*..sln'
-      - '*.csproj'
+      - '**/*.props'
+      - '**/*.targets'
+      - '**/*.sln'
+      - '**/*.csproj'
       - 'Directory.Build.props.default'
 
 i18n:
   - changed-files:
     - any-glob-to-any-file:
-      - '*.pot'
-      - '*.po'
+      - '**/*.pot'
+      - '**/*.po'
 
 docs:
   - changed-files:
     - any-glob-to-any-file:
-      - '*.md'
+      - '**/*.md'
 
 
 
