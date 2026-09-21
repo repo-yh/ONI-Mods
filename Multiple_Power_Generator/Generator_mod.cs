@@ -84,9 +84,14 @@ namespace Multiple_Power_Generator
         [HarmonyPatch(typeof(BatteryUI), "SetContent")]
         public class BatteryUI_SetContent
         {
-            private static void Pretfix(BatteryUI __instance,Battery bat, Dictionary<float, float> ___sizeMap)
+            private static void Prefix(Battery bat, Dictionary<float, float> ___sizeMap)
             {
-                ___sizeMap?.TryAdd(bat.Capacity, 40f);
+                // 首次表为空时官方 Initialize 尚未填充，提前插入会占位导致官方三档丢失，直接跳过
+                if (___sizeMap == null || ___sizeMap.Count == 0)
+                {
+                    return;
+                }
+                ___sizeMap.TryAdd(bat.Capacity, 40f);
             }
         }
 
