@@ -9,6 +9,7 @@
     <Description>补给包现在可以保存上一次打印的物品.</Description>
 	<UsesPLib>false</UsesPLib>
 	<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+	<minimumSupportedBuild>744825</minimumSupportedBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,10 @@
     <None Update="Translations\zh.po">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="archived_versions\Previous_744825\" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
