@@ -168,8 +168,8 @@ namespace Multiple_Power_Generator
             {
                 Battery battery = go.AddOrGet<Battery>();
                 battery.capacity *= SingletonOptions<Options>.Instance.BatteryRatio;
-                // 放电侧走 Generator.WattageRating(已乘PowerRatio),充电侧不同步放大则吞吐被卡在原版功率
-                battery.chargeWattage *= SingletonOptions<Options>.Instance.PowerRatio;
+                // 充电侧倍率取发电机/电池/电线三项最小值，充电负担不超过最薄弱环节
+                battery.chargeWattage *= Mathf.Min(SingletonOptions<Options>.Instance.PowerRatio, SingletonOptions<Options>.Instance.BatteryRatio, SingletonOptions<Options>.Instance.WireRatio);
             }
         }
         [HarmonyPatch(typeof(PowerTransformerSmallConfig), "DoPostConfigureComplete")]
@@ -179,7 +179,7 @@ namespace Multiple_Power_Generator
             {
                 Battery battery = go.AddOrGet<Battery>();
                 battery.capacity *= SingletonOptions<Options>.Instance.BatteryRatio;
-                battery.chargeWattage *= SingletonOptions<Options>.Instance.PowerRatio;
+                battery.chargeWattage *= Mathf.Min(SingletonOptions<Options>.Instance.PowerRatio, SingletonOptions<Options>.Instance.BatteryRatio, SingletonOptions<Options>.Instance.WireRatio);
             }
         }
         [HarmonyPatch(typeof(StructureTemperaturePayload), "OperatingKilowatts", MethodType.Getter)]
