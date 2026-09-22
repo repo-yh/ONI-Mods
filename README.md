@@ -22,8 +22,9 @@ This is a collection of mods for Oxygen Not Included, written by Xyr.
 
 - [.NET SDK 10.x](https://dotnet.microsoft.com/download)（命令行构建）或 Visual Studio 2022（勾选“.NET 桌面开发”工作负载）。
 - 如需完整合包（ILRepack 将依赖 DLL 合入主 DLL），需安装 [.NET Framework 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48)。
-- 游戏引用程序集已随仓库 `lib/` 目录分发，clone 后可直接编译。
-- Debug 重新生成时，构建脚本会自动从 `GameFolder`（游戏 `OxygenNotIncluded_Data\Managed\`）同步游戏 DLL 到 `lib/`——游戏版本更新后重新生成一次即可，无需手动拷贝（需保证 `GameFolder` 配置正确）。
+
+> [!NOTE]
+> 游戏引用程序集已随仓库 `lib/` 目录分发，clone 后可直接编译；Debug 重新生成时会自动从 `GameFolder`（游戏 `OxygenNotIncluded_Data\Managed\`）同步游戏 DLL 到 `lib/`，游戏版本更新后重新生成一次即可，无需手动拷贝（需保证 `GameFolder` 配置正确）。
 
 ### 路径配置
 
@@ -35,7 +36,10 @@ This is a collection of mods for Oxygen Not Included, written by Xyr.
 |`GameFolder`|`$(SteamFolder)\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed`|游戏托管程序集目录|
 |`ModFolder`|`%USERPROFILE%\Documents\Klei\OxygenNotIncluded\mods`|游戏本地 mods 目录|
 
-路径与默认值不一致时，在仓库根新建 `Directory.Build.props.user` 覆盖同名属性即可（该文件不随 git 分发，注意不要提交）：
+路径与默认值不一致时，在仓库根新建 `Directory.Build.props.user` 覆盖同名属性即可：
+
+> [!WARNING]
+> `Directory.Build.props.user` 不随 git 分发，注意不要提交到仓库。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
