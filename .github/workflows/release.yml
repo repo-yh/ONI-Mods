@@ -82,7 +82,8 @@ jobs:
       uses: actions/cache@v6
       env:
         cache-name: cache-mod
-        files: '${{ matrix.configuration }}/revision.txt'
+        # DlcUnlockPatcher 的 ShouldDistribute=false 使 revision.txt 永不递增（key 恒定会吞掉源码修改），改用源码 hash
+        files: ${{ matrix.configuration == 'DlcUnlockPatcher' && 'DlcUnlockPatcher/**/*.cs,DlcUnlockPatcher/*.csproj,DlcUnlockPatcher/revision.txt,DlcUnlockPatcher/proxy.ini,lib/version.dll' || format('{0}/revision.txt', matrix.configuration) }}
       with:
         path: .\Distribute
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.configuration }}-${{ hashFiles(env.files) }}
