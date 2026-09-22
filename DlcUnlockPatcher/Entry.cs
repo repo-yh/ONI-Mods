@@ -1,69 +1,74 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using HarmonyLib;
 
 namespace DlcUnlockPatcher
 {
-    // Token: 0x02000004 RID: 4
     public static class Entry
-	{
-        // Token: 0x06000003 RID: 3 RVA: 0x00002068 File Offset: 0x00000268
+    {
+        public static bool LogEnabled = true;
 
         public static void Run()
-		{
+        {
             try
             {
-                AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(OnAssemblyResolve); ;
-
-                Patches.MatchId = Environment.GetEnvironmentVariable("YH_PATCH_MATCH_ID");
+                AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+                Patches.MatchId = Environment.GetEnvironmentVariable("DLC_PATCHER_MATCH_ID");
                 if (string.IsNullOrEmpty(Patches.MatchId))
                 {
                     Patches.MatchId = "COSMETIC1_ID";
                 }
-                Log($"entry, match_id={Patches.MatchId}");
-
-                var harmony = new Harmony("yh.dlcunlock");
+                var logEnv = Environment.GetEnvironmentVariable("DLC_PATCHER_LOG");
+                if (logEnv == "0")
+                {
+                    LogEnabled = false;
+                }
+                Log("entry, match_id=" + Patches.MatchId);
+                var harmony = new Harmony("dlc.unlock.patcher");
                 harmony.PatchAll(typeof(Patches).Assembly);
                 Log("patched");
             }
             catch (Exception ex)
             {
-                Log($"FATAL {ex}");
+                Log("FATAL " + ex);
             }
         }
 
-		// Token: 0x06000004 RID: 4 RVA: 0x0000212C File Offset: 0x0000032C
-		private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
-		{
-			string environmentVariable = Environment.GetEnvironmentVariable("YH_PATCH_DIR");
-			if (string.IsNullOrEmpty(environmentVariable))
-			{
-				return null;
-			}
-			string name = new AssemblyName(args.Name).Name;
-			string text = Path.Combine(environmentVariable, name + ".dll");
-			if (!File.Exists(text))
-			{
-				return null;
-			}
-			Entry.Log("resolve " + args.Name + " -> " + text);
-			return Assembly.LoadFrom(text);
-		}
+        private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var dir = Environment.GetEnvironmentVariable("DLC_PATCHER_DIR");
+            if (string.IsNullOrEmpty(dir))
+            {
+                return null;
+            }
+            var name = new AssemblyName(args.Name).Name;
+            var path = Path.Combine(dir, name + ".dll");
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+            Log("resolve " + args.Name + " -> " + path);
+            return Assembly.LoadFrom(path);
+        }
 
-		// Token: 0x06000005 RID: 5 RVA: 0x0000219C File Offset: 0x0000039C
-		private static void Log(string msg)
-		{
-			try
-			{
-				File.AppendAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "yhpatcher.log"), System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff ") + msg + Environment.NewLine);
-			}
-			catch
-			{
-			}
-		}
-
-
-	}
+        private static void Log(string msg)
+        {
+            if (!LogEnabled)
+            {
+                return;
+            }
+            try
+            {
+                // 游戏程序集（Assembly-CSharp）里有全局 DateTime 类型会遮蔽 System.DateTime，必须全限定
+                File.AppendAllText(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dlcpatcher.log"),
+                    System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff ") + msg + Environment.NewLine);
+            }
+            catch
+            {
+                // 日志失败不影响主流程
+            }
+        }
+    }
 }
