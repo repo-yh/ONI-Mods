@@ -53,7 +53,7 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat, NuclearResearch, Storage_Isolation]
+        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat, NuclearResearch, Storage_Isolation, DlcUnlockPatcher]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
     permissions:
@@ -82,7 +82,8 @@ jobs:
       uses: actions/cache@v6
       env:
         cache-name: cache-mod
-        files: '${{ matrix.configuration }}/revision.txt'
+        # DlcUnlockPatcher 的 ShouldDistribute=false 使 revision.txt 永不递增（key 恒定会吞掉源码修改），改用源码 hash
+        files: ${{ matrix.configuration == 'DlcUnlockPatcher' && 'DlcUnlockPatcher/**/*.cs,DlcUnlockPatcher/*.csproj,DlcUnlockPatcher/revision.txt,DlcUnlockPatcher/proxy.ini,lib/version.dll' || format('{0}/revision.txt', matrix.configuration) }}
       with:
         path: .\Distribute
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.configuration }}-${{ hashFiles(env.files) }}
@@ -110,6 +111,20 @@ jobs:
         ls Distribute/
       env:
         Configuration: ${{ matrix.configuration }}
+
+    # DlcUnlockPatcher：msbuild 只编 C#（ShouldDistribute=false 跳过 mod 打包），此 step 组装部署包入 cache 目录
+    - if: ${{ steps.cache-mod.outputs.cache-hit != 'true' && matrix.configuration == 'DlcUnlockPatcher' }}
+      name: Pack DlcUnlockPatcher
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path DlcUnlockPatcher/dist/DlcUnlockPatcher | Out-Null
+        Copy-Item lib/version.dll DlcUnlockPatcher/dist/
+        Copy-Item DlcUnlockPatcher/proxy.ini DlcUnlockPatcher/dist/
+        Copy-Item lib/0Harmony.dll DlcUnlockPatcher/dist/DlcUnlockPatcher/
+        Copy-Item DlcUnlockPatcher/bin/CI/netstandard2.1/DlcUnlockPatcher.dll DlcUnlockPatcher/dist/DlcUnlockPatcher/
+        New-Item -ItemType Directory -Force -Path Distribute | Out-Null
+        Compress-Archive -Path DlcUnlockPatcher/dist/* -DestinationPath Distribute/DlcUnlockPatcher.zip -Force
+        Get-ChildItem Distribute/
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts

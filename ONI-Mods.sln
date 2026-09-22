@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage_Isolation", "Storag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuclearResearch", "NuclearResearch\NuclearResearch.csproj", "{109D64D9-BF38-D762-B295-7CBB31C697C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DlcUnlockPatcher", "DlcUnlockPatcher\DlcUnlockPatcher.csproj", "{31F84E82-D108-44E3-9BDE-046095DA0D5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI|Any CPU = CI|Any CPU
@@ -73,6 +75,12 @@ Global
 		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{109D64D9-BF38-D762-B295-7CBB31C697C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.CI|Any CPU.ActiveCfg = CI|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.CI|Any CPU.Build.0 = CI|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F84E82-D108-44E3-9BDE-046095DA0D5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
