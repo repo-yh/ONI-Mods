@@ -10,7 +10,7 @@ namespace DlcUnlockPatcher
     {
         private static bool _ran;
         private static bool _resolveHooked;
-        private static Dictionary<string, string> _proxyIni;
+        private static Dictionary<string, string> _proxyIni = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public static bool LogEnabled = true;
 
@@ -166,7 +166,7 @@ namespace DlcUnlockPatcher
 
         private static Dictionary<string, string> LoadProxyIni()
         {
-            if (_proxyIni != null)
+            if (_proxyIni != null && _proxyIni.Count > 0)
             {
                 return _proxyIni;
             }
