@@ -182,18 +182,51 @@ namespace Multiple_Power_Generator
                 battery.chargeWattage *= Mathf.Min(SingletonOptions<Options>.Instance.PowerRatio, SingletonOptions<Options>.Instance.BatteryRatio, SingletonOptions<Options>.Instance.WireRatio);
             }
         }
+        [HarmonyPatch(typeof(Battery), "OnSpawn")]
+        public class Battery_OnSpawn
+        {
+            // 变压器充电端挂"当前充电功率"状态项:悬浮卡片与选中侧边栏实时显示从上游抽取的功率(含第三方变压器)
+            public static void Postfix(Battery __instance)
+            {
+                if (__instance.powerTransformer == null) return;
+                __instance.GetComponent<KSelectable>()?.SetStatusItem(Db.Get().StatusItemCategories.Power, TransformerChargeWattageItem.Item, __instance);
+            }
+        }
+        public static class TransformerChargeWattageItem
+        {
+            public static readonly StatusItem Item = new StatusItem(
+                "MPG_TransformerChargeWattage",
+                STRINGS.BUILDING.STATUSITEMS.SOLARPANELWATTAGE.NAME,
+                "",
+                "",
+                StatusItem.IconType.Info,
+                NotificationType.Neutral,
+                allow_multiples: false,
+                OverlayModes.Power.ID);
+
+            static TransformerChargeWattageItem()
+            {
+                Item.resolveStringCallback = delegate (string str, object data)
+                {
+                    Battery battery = (Battery)data;
+                    str = str.Replace("{Wattage}", GameUtil.GetFormattedWattage(battery.WattsUsed));
+                    return str;
+                };
+            }
+        }
         [HarmonyPatch(typeof(StructureTemperaturePayload), "OperatingKilowatts", MethodType.Getter)]
         public static class OperatingKilowatts_Patch
         {
-            // 有变压器组件(含第三方):放电端电网有用电(>0)→原版热量;没用电(0/未连)→0
+            // 有变压器组件(含第三方):实际在从上游抽电(WattsUsed>自泄漏+1J/s)→原版热量;否则(空载/断线补漏)→0
             public static bool Prefix(StructureTemperaturePayload __instance, ref float __result)
             {
                 Building building = __instance.building;
                 if (building == null) return true;
                 PowerTransformer transformer = building.GetComponent<PowerTransformer>();
                 if (transformer == null) return true;
-                float wattsUsed = Game.Instance.circuitManager.GetWattsUsedByCircuit(transformer.CircuitID);
-                if (wattsUsed > 0f) return true;
+                Battery battery = building.GetComponent<Battery>();
+                if (battery == null) return true;
+                if (battery.WattsUsed > battery.joulesLostPerSecond + 1f) return true;
                 __result = 0f;
                 return false;
             }
