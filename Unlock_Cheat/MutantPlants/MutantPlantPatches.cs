@@ -45,7 +45,7 @@ namespace Unlock_Cheat.MutantPlants
                     KPrefabID prefab1 = newdata.GetComponent<KPrefabID>();
 
 
-                    if (prefab == null || prefab1 == null || prefab.PrefabTag != prefab1.PrefabTag)
+                    if (prefab == null || prefab1 == null || prefab.PrefabID() != prefab1.PrefabID())
                     {
                         return;
                     }
