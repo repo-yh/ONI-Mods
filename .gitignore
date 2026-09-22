@@ -8,3 +8,8 @@
 **/.vs
 output/
 Distribute/
+
+# DlcUnlockPatcher 原生代理构建产物
+DlcUnlockPatcher/build/
+DlcUnlockPatcher/dist/
+DlcUnlockPatcher/*.zip
