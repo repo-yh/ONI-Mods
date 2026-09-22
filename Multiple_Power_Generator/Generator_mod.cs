@@ -168,8 +168,8 @@ namespace Multiple_Power_Generator
             {
                 Battery battery = go.AddOrGet<Battery>();
                 battery.capacity *= SingletonOptions<Options>.Instance.BatteryRatio;
-
-
+                // 放电侧走 Generator.WattageRating(已乘PowerRatio),充电侧不同步放大则吞吐被卡在原版功率
+                battery.chargeWattage *= SingletonOptions<Options>.Instance.PowerRatio;
             }
         }
         [HarmonyPatch(typeof(PowerTransformerSmallConfig), "DoPostConfigureComplete")]
@@ -179,8 +179,23 @@ namespace Multiple_Power_Generator
             {
                 Battery battery = go.AddOrGet<Battery>();
                 battery.capacity *= SingletonOptions<Options>.Instance.BatteryRatio;
-
-
+                battery.chargeWattage *= SingletonOptions<Options>.Instance.PowerRatio;
+            }
+        }
+        [HarmonyPatch(typeof(StructureTemperaturePayload), "OperatingKilowatts", MethodType.Getter)]
+        public static class OperatingKilowatts_Patch
+        {
+            // 有变压器组件(含第三方):放电端电网有用电(>0)→原版热量;没用电(0/未连)→0
+            public static bool Prefix(StructureTemperaturePayload __instance, ref float __result)
+            {
+                Building building = __instance.building;
+                if (building == null) return true;
+                PowerTransformer transformer = building.GetComponent<PowerTransformer>();
+                if (transformer == null) return true;
+                float wattsUsed = Game.Instance.circuitManager.GetWattsUsedByCircuit(transformer.CircuitID);
+                if (wattsUsed > 0f) return true;
+                __result = 0f;
+                return false;
             }
         }
     }
