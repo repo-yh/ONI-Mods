@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
 	<ShouldDistribute>false</ShouldDistribute>
+	<!-- 部署形态非游戏 mod（version.dll 注入器），不走 ILRepack 合包；打包由 release.yml 独立 step 完成 -->
+	<ILRepack>false</ILRepack>
 </PropertyGroup>
 
 </Project>
