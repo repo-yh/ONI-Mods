@@ -53,7 +53,7 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat, NuclearResearch, Storage_Isolation]
+        configuration: [GeoTuner_mod, Multiple_Power_Generator, SelectLastCarePackage, Unlock_Cheat, NuclearResearch, Storage_Isolation, DlcUnlockPatcher]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
     permissions:
@@ -107,9 +107,22 @@ jobs:
         cd ${{ github.workspace }}
         ls lib/
         msbuild $env:Configuration /t:Rebuild /p:Configuration=CI
-        ls Distribute/
+        if (Test-Path Distribute) { ls Distribute/ }
       env:
         Configuration: ${{ matrix.configuration }}
+
+    # DlcUnlockPatcher：msbuild 只编 C#（ShouldDistribute=false 跳过 mod 打包），此 step 组装部署包入 cache 目录
+    - if: ${{ steps.cache-mod.outputs.cache-hit != 'true' && matrix.configuration == 'DlcUnlockPatcher' }}
+      name: Pack DlcUnlockPatcher
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path DlcUnlockPatcher/dist/DlcUnlockPatcher | Out-Null
+        Copy-Item lib/version.dll DlcUnlockPatcher/dist/
+        Copy-Item DlcUnlockPatcher/proxy.ini DlcUnlockPatcher/dist/
+        Copy-Item DlcUnlockPatcher/bin/CI/netstandard2.1/DlcUnlockPatcher.dll DlcUnlockPatcher/dist/DlcUnlockPatcher/
+        New-Item -ItemType Directory -Force -Path Distribute | Out-Null
+        Compress-Archive -Path DlcUnlockPatcher/dist/* -DestinationPath Distribute/DlcUnlockPatcher.zip -Force
+        Get-ChildItem Distribute/
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
