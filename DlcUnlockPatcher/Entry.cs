@@ -35,7 +35,7 @@ namespace DlcUnlockPatcher
             }
         }
 
-        private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly? OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var dir = Environment.GetEnvironmentVariable("DLC_PATCHER_DIR");
             if (string.IsNullOrEmpty(dir))
