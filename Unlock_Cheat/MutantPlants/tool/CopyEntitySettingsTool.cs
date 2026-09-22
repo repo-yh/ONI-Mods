@@ -74,12 +74,16 @@ namespace Unlock_Cheat.MutantPlants.CopySetting
         }
 
         private void CopyCritterSettings() => CopySettings<CreatureBrain>(Components.Brains, kmb => kmb.isSpawned && !kmb.HasTag(GameTags.Dead));
-        private void CopyPlantSettings() => CopySettings<Uprootable>(Components.Uprootables);
+        private void CopyPlantSettings() => CopySettings<Uprootable>(Components.Uprootables, kmb => kmb.TryGetComponent<MutantPlant>(out _));
         private void CopyMinionSettings() => CopySettings<MinionIdentity>(Components.MinionIdentities);
         private void CopyGeyserSettings() => CopySettings<Geyser>(Components.Geysers.GetItems(sourceGameObject.GetMyWorldId()));
 
         private void CopySettings<T>(IEnumerable cmps, Func<KMonoBehaviour, bool> predicate = null) where T : KMonoBehaviour
         {
+            var sourceId = sourceGameObject.GetComponent<KPrefabID>();
+            if (sourceId == null)
+                return;
+
             foreach (var cmp in cmps)
             {
                 var kmb = cmp as T;
@@ -89,6 +93,10 @@ namespace Unlock_Cheat.MutantPlants.CopySetting
 
             void CopyTo(GameObject go)
             {
+                // 同原版 CopyBuildingSettings.ApplyCopy：过滤后才广播，异类型不 Trigger 也不弹已复制提示
+                if (go == sourceGameObject || !go.TryGetComponent<KPrefabID>(out var targetId) || targetId.PrefabID() != sourceId.PrefabID())
+                    return;
+
                 go.Trigger((int)GameHashes.CopySettings, sourceGameObject);
                 PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Plus, UI.COPIED_SETTINGS, go.transform, new Vector3(0f, 0.5f, 0f), 1.5f, false, false);
             }
