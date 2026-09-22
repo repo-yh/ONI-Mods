@@ -1,8 +1,9 @@
 ﻿using HarmonyLib;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 using Unlock_Cheat.MutantPlants.CopySetting;
 
 
@@ -30,33 +31,27 @@ namespace Unlock_Cheat.MutantPlants.CopySettingPatch
 
     }
 
-
-
-    [HarmonyPatch(typeof(Assets), nameof(Assets.CreatePrefabs))]
-    class ApplySettingsToDefs
+    [HarmonyPatch(typeof(Assets), "CreatePrefabs")]
+    internal class ApplySettingsToDefs
     {
-        static void Postfix()
+        private static void Postfix()
         {
-            var cmpMap = new ComponentMapper(new()
+            ComponentMapper componentMapper = new ComponentMapper(new()
             {
-                (typeof(Uprootable), typeof(MutantCopyButton))
+                 (typeof(Uprootable), typeof(MutantCopyButton))
             });
-
-            foreach (var prefab in Assets.Prefabs)
-                cmpMap.ApplyMap(prefab.gameObject);
+            foreach (KPrefabID kprefabID in Assets.Prefabs)
+            {
+                componentMapper.ApplyMap(kprefabID.gameObject);
+            }
         }
     }
 
-
-
-
     public class ComponentMapper : ComponentMapper<object>
     {
-        /// <inheritdoc cref="ComponentMapper{T}"/>
         public ComponentMapper(List<(Type flagCmp, Type addCmp)> map) : base(map.Select(x => (x.flagCmp, x.addCmp, (object)null)).ToList())
         { }
 
-        /// <inheritdoc cref="ComponentMapper{T}.ApplyMap(GameObject, Func{T, bool})"/>
         public void ApplyMap(GameObject go) => ApplyMap(go, _ => true);
     }
 
@@ -64,17 +59,8 @@ namespace Unlock_Cheat.MutantPlants.CopySettingPatch
     {
         private readonly List<(Type flagCmp, Type addCmp, T filter)> map;
 
-        /// <summary>
-        /// Maps detected components to new components that will be added.
-        /// Processed first to last, so interface fallbacks should be after specific implementations.
-        /// </summary>
         public ComponentMapper(List<(Type flagCmp, Type addCmp, T filter)> map) => this.map = map;
 
-        /// <summary>
-        /// Apply component map to GO, adding new components if applicable.
-        /// </summary>
-        /// <param name="go">The GameObject to work on</param>
-        /// <param name="shouldAdd">Function uses filter to determine if the new component should be added to the GO</param>
         public void ApplyMap(GameObject go, Func<T, bool> shouldAdd)
         {
             var typeToAdd = GetTypeToAdd(go, shouldAdd);

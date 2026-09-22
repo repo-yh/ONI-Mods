@@ -31,7 +31,7 @@ namespace Unlock_Cheat.MutantPlants.CopySetting
         }
     }
 
-    class MutantCopyButton : CopySettingsTool
+    class MutantCopyButton : KMonoBehaviour
 
     {
 #pragma warning disable CS0649,CS0169 // 禁用 "从未赋值" 警告

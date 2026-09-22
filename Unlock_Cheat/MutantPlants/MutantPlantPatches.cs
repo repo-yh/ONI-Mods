@@ -40,6 +40,17 @@ namespace Unlock_Cheat.MutantPlants
                 bool flag2 = !(component == null);             
                 if (flag2)
                 {
+
+                    KPrefabID prefab =  gameObject.GetComponent<KPrefabID>();
+                    KPrefabID prefab1 = newdata.GetComponent<KPrefabID>();
+
+
+                    if (prefab == null || prefab1 == null || prefab.PrefabTag != prefab1.PrefabTag)
+                    {
+                        return;
+                    }
+
+
                     //newdata.SetSubSpecies(component.MutationIDs);
                     //newdata.ApplyMutator();
                     component.CopyMutationsTo(newdata);

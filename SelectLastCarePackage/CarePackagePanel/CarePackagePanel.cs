@@ -86,8 +86,7 @@ namespace SelectLastCarePackage.CarePackagePanel
 				{
 					typeof(RectTransform),
 					typeof(CanvasRenderer),
-					typeof(Image),
-					typeof(Canvas)
+					typeof(Image)
 				});
 
                 gameObject.transform.SetParent(target.transform, false);
@@ -128,14 +127,6 @@ namespace SelectLastCarePackage.CarePackagePanel
             rectTransform.anchorMax = Vector2.one;
             rectTransform.offsetMin = Vector2.zero;
             rectTransform.offsetMax = Vector2.zero;
-            Canvas canvas = gameObject.GetComponent<Canvas>();
-            canvas.overrideSorting = true;
-            Canvas container_canvas = container.GetComponentInParent<Canvas>();
-            canvas.sortingOrder = ((container_canvas != null) ? container_canvas.sortingOrder : 0) + 3;
-
-
-
-            gameObject.AddComponent<GraphicRaycaster>();
 
             Image image = gameObject.GetComponent<Image>();
             image.color = new Color(0f, 0f, 0f, 0.55f);
@@ -249,10 +240,34 @@ namespace SelectLastCarePackage.CarePackagePanel
                     rectTransform3.anchorMax = Vector2.one;
                     rectTransform3.offsetMin = Vector2.zero;
                     rectTransform3.offsetMax = Vector2.zero;
+                    inputField.text = string.Empty;
                     TMP_Text placeholder = inputField.placeholder as TMP_Text;
+                    if (placeholder == null && inputField.textComponent != null)
+                    {
+                        // 克隆源是 FindObjectsOfTypeAll 首个命中，可能没有占位词，代码组装一个
+                        GameObject gameObject4 = new GameObject("Placeholder", new Type[]
+                        {
+                                typeof(RectTransform)
+                        });
+                        gameObject4.transform.SetParent(inputField.textComponent.transform.parent, false);
+                        RectTransform component4 = gameObject4.GetComponent<RectTransform>();
+                        component4.anchorMin = Vector2.zero;
+                        component4.anchorMax = Vector2.one;
+                        component4.offsetMin = Vector2.zero;
+                        component4.offsetMax = Vector2.zero;
+                        TextMeshProUGUI component5 = gameObject4.AddComponent<TextMeshProUGUI>();
+                        component5.font = inputField.textComponent.font;
+                        component5.fontSize = inputField.textComponent.fontSize;
+                        component5.alignment = TextAlignmentOptions.Left;
+                        component5.raycastTarget = false;
+                        inputField.placeholder = component5;
+                        placeholder = component5;
+                    }
                     if (placeholder != null)
                     {
                         placeholder.SetText(Languages.SEARCH_HINT);
+                        placeholder.gameObject.SetActive(true);
+                        placeholder.color = new Color(1f, 1f, 1f, 0.4f);
                     }
                     inputField.onValueChanged.AddListener(delegate (string value)
                     {
@@ -280,11 +295,11 @@ namespace SelectLastCarePackage.CarePackagePanel
             component.offsetMin = new Vector2(7f, 20f);
             component.offsetMax = new Vector2(-7f, -80f);
             gameObject.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.05f);
-            ScrollRect scrollRect = gameObject.AddComponent<ScrollRect>();
+            // 官方 KScrollRect：自带滚轮惯性（velocity 衰减）与 FMOD 滚动音效，OnScroll 不走原生 sensitivity
+            KScrollRect scrollRect = gameObject.AddComponent<KScrollRect>();
             scrollRect.horizontal = false;
             scrollRect.vertical = true;
-            scrollRect.movementType = ScrollRect.MovementType.Clamped;
-            scrollRect.scrollSensitivity = 30f;
+            scrollRect.movementType = ScrollRect.MovementType.Elastic;
             GameObject gameObject2 = new GameObject("Viewport", new Type[]
             {
                     typeof(RectTransform),
@@ -331,18 +346,8 @@ namespace SelectLastCarePackage.CarePackagePanel
             if (srcClose != null)
             {
                 // 克隆原版关闭按钮：自带 X 图标、文字与 KButton 主题（含悬停变色）
+                // ToolTip 沿用克隆体自带实例（FixedStringKey 序列化在原版资产，激活时自动取本地化文字）
                 gameObject = Util.KInstantiateUI(srcClose.gameObject, transform.gameObject, true);
-                ToolTip toolTip = gameObject.GetComponent<ToolTip>();
-                DestroyImmediate(toolTip);
-                toolTip = gameObject.AddComponent<ToolTip>();
-                toolTip.tooltipPivot = new Vector2(0.5f, 0f);
-                toolTip.tooltipPositionOffset = new Vector2(0f, 10f);
-                toolTip.parentPositionAnchor = new Vector2(0.5f, 0.5f);
-                toolTip.toolTipPosition = ToolTip.TooltipPosition.Custom;
-                toolTip.SetSimpleTooltip(STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
-                toolTip.UseFixedStringKey=true;
-
-                //KleiItemsUI.ConfigureTooltipOn(gameObject, STRINGS.UI.TOOLTIPS.CLOSETOOLTIP);
                 // 克隆体是 KButton：先重置全部点击绑定，再重新绑定面板关闭
                 KButton kButton = gameObject.GetComponent<KButton>();
                 kButton.ClearOnClick();
@@ -402,6 +407,10 @@ namespace SelectLastCarePackage.CarePackagePanel
                 component.minHeight = 27f;
                 component.preferredHeight = 27f;
                 gameObject.GetComponent<Image>().color = Color.white;
+                // 黑色细边框区分行边界：Outline 复制顶点四向偏移画描边，超出行的 0.5px 落入行距形成分割线，无新增物体
+                Outline outline = gameObject.AddComponent<Outline>();
+                outline.effectColor = new Color(0f, 0f, 0f, 0.65f);
+                outline.effectDistance = new Vector2(0.5f, 0.5f);
                 GameObject gameObject2 = new GameObject("Icon", new Type[]
                 {
                         typeof(RectTransform),

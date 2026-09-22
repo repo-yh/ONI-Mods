@@ -4,7 +4,9 @@ using PeterHan.PLib.Core;
 using PeterHan.PLib.Options;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Multiple_Power_Generator
 {
@@ -81,18 +83,37 @@ namespace Multiple_Power_Generator
             }
         }
 
-        [HarmonyPatch(typeof(BatteryUI), "SetContent")]
-        public class BatteryUI_SetContent
+        [HarmonyPatch(typeof(BatteryUI), "Initialize")]
+        public class BatteryUI_Initialize
         {
-            private static void Prefix(Battery bat, Dictionary<float, float> ___sizeMap)
+            private static void Prefix(ref Dictionary<float, float> ___sizeMap)
             {
-                // 首次表为空时官方 Initialize 尚未填充，提前插入会占位导致官方三档丢失，直接跳过
-                if (___sizeMap == null || ___sizeMap.Count == 0)
+                if (___sizeMap != null && ___sizeMap.Count > 0)
                 {
                     return;
                 }
-                ___sizeMap.TryAdd(bat.Capacity, 40f);
+                ___sizeMap = new Dictionary<float, float>();                
+                ___sizeMap.TryAdd(20000f * SingletonOptions<Options>.Instance.BatteryRatio, 10f);
+                ___sizeMap.TryAdd(40000f * SingletonOptions<Options>.Instance.BatteryRatio, 25f);
+                ___sizeMap.TryAdd(60000f * SingletonOptions<Options>.Instance.BatteryRatio, 40f);
             }
+        }
+
+
+        [HarmonyPatch(typeof(BatteryUI), "SetContent")]
+        public class BatteryUI_SetContent
+        {
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                float limit = 40000f * SingletonOptions<Options>.Instance.BatteryRatio;
+
+                Debug.Log(" === Transpiler applied === ");
+                return instructions.Manipulator(
+                    instr => instr.opcode == OpCodes.Ldc_R4 && ((float)instr.operand) == 40000f,  // 匹配条件
+                    instr =>  instr.operand = limit // 修改动作：替换 operand
+                );
+            }
+
         }
 
         [HarmonyPatch(typeof(BatteryMediumConfig), "DoPostConfigureComplete")]
