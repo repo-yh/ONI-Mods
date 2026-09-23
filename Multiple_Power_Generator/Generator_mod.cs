@@ -5,6 +5,7 @@ using PeterHan.PLib.Options;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -189,7 +190,34 @@ namespace Multiple_Power_Generator
             public static void Postfix(Battery __instance)
             {
                 if (__instance.powerTransformer == null) return;
-                __instance.GetComponent<KSelectable>()?.SetStatusItem(Db.Get().StatusItemCategories.Power, TransformerChargeWattageItem.Item, __instance);
+                // SetStatusItem 按 category 单槽位,通电/断电时官方 OnTagsChanged 会把 BatteryJoulesAvailable
+                // 挂回 Power 分类挤掉本项;AddStatusItem 走无分类条目,与官方项共存
+                __instance.GetComponent<KSelectable>()?.AddStatusItem(TransformerChargeWattageItem.Item, __instance);
+            }
+        }
+        [HarmonyPatch(typeof(Battery), "EnergySim200ms")]
+        public static class Battery_EnergySim200ms
+        {
+            // Sim 端自发热功率仅在 StructureTemperatureHeader.dirty 时经 UpdateSimState 提交,
+            // dirty 只随通电/断电翻转置位;判据依赖连续量 WattsUsed,负载变化不触发 dirty,
+            // Sim 端会冻结在上次提交值(空载仍产热/带载不产热)。检测判据翻转,翻转时
+            // 同步 Sim 端温度回 InternalTemperature 并置 dirty,让官方链路提交新值。
+            private static readonly ConditionalWeakTable<Battery, object> lastHeatState = new ConditionalWeakTable<Battery, object>();
+
+            public static void Postfix(Battery __instance)
+            {
+                if (__instance.powerTransformer == null) return;
+                bool shouldHeat = TransformerChargeWattageItem.ShouldHeat(__instance);
+                if (lastHeatState.TryGetValue(__instance, out var boxed) && (bool)boxed == shouldHeat) return;
+                lastHeatState.Remove(__instance);
+                lastHeatState.Add(__instance, shouldHeat);
+                HandleVector<int>.Handle handle = GameComps.StructureTemperatures.GetHandle(__instance.gameObject);
+                if (!handle.IsValid()) return;
+                GameComps.StructureTemperatures.GetData(handle, out var header, out var payload);
+                if (payload.primaryElement == null) return;
+                payload.primaryElement.InternalTemperature = payload.primaryElement.Temperature;
+                header.dirty = true;
+                GameComps.StructureTemperatures.SetHeader(handle, header);
             }
         }
         public static class TransformerChargeWattageItem
@@ -203,6 +231,12 @@ namespace Multiple_Power_Generator
                 NotificationType.Neutral,
                 allow_multiples: false,
                 OverlayModes.Power.ID);
+
+            // 发热判据:实际从上游抽电超自泄漏+1W 才发热(OperatingKilowatts patch 与 dirty 同步共用)
+            public static bool ShouldHeat(Battery battery)
+            {
+                return battery.WattsUsed > battery.joulesLostPerSecond + 1f;
+            }
 
             static TransformerChargeWattageItem()
             {
@@ -226,7 +260,7 @@ namespace Multiple_Power_Generator
                 if (transformer == null) return true;
                 Battery battery = building.GetComponent<Battery>();
                 if (battery == null) return true;
-                if (battery.WattsUsed > battery.joulesLostPerSecond + 1f) return true;
+                if (TransformerChargeWattageItem.ShouldHeat(battery)) return true;
                 __result = 0f;
                 return false;
             }
