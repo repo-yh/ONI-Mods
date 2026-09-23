@@ -202,15 +202,14 @@ namespace Multiple_Power_Generator
             // dirty 只随通电/断电翻转置位;判据依赖连续量 WattsUsed,负载变化不触发 dirty,
             // Sim 端会冻结在上次提交值(空载仍产热/带载不产热)。检测判据翻转,翻转时
             // 同步 Sim 端温度回 InternalTemperature 并置 dirty,让官方链路提交新值。
-            private static readonly ConditionalWeakTable<Battery, object> lastHeatState = new ConditionalWeakTable<Battery, object>();
+            internal static readonly Dictionary<Battery, bool> lastHeatState = new Dictionary<Battery, bool>();
 
             public static void Postfix(Battery __instance)
             {
                 if (__instance.powerTransformer == null) return;
                 bool shouldHeat = TransformerChargeWattageItem.ShouldHeat(__instance);
-                if (lastHeatState.TryGetValue(__instance, out var boxed) && (bool)boxed == shouldHeat) return;
-                lastHeatState.Remove(__instance);
-                lastHeatState.Add(__instance, shouldHeat);
+                if (lastHeatState.TryGetValue(__instance, out bool boxed)  && boxed == shouldHeat) return;
+                lastHeatState[__instance]= shouldHeat;
                 HandleVector<int>.Handle handle = GameComps.StructureTemperatures.GetHandle(__instance.gameObject);
                 if (!handle.IsValid()) return;
                 GameComps.StructureTemperatures.GetData(handle, out var header, out var payload);
@@ -218,6 +217,15 @@ namespace Multiple_Power_Generator
                 payload.primaryElement.InternalTemperature = payload.primaryElement.Temperature;
                 header.dirty = true;
                 GameComps.StructureTemperatures.SetHeader(handle, header);
+            }
+        }
+
+        [HarmonyPatch(typeof(Battery), "OnCleanUp")]
+        public static class Battery_OnCleanUp
+        {
+            public static void Prefix(Battery __instance)
+            {
+                Battery_EnergySim200ms.lastHeatState.Remove(__instance);
             }
         }
         public static class TransformerChargeWattageItem
