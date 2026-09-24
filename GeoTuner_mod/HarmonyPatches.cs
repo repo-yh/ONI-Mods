@@ -193,7 +193,8 @@ namespace GeoTuner_mod
                     GeoTunerConfig.GeotunedGeyserSettings settingsForGeyser = __instance.def.GetSettingsForGeyser(assignedGeyser);
                     __instance.currentGeyserModification = settingsForGeyser.template;
                     __instance.currentGeyserModification.originID = __instance.originID;
-                    __instance.enhancementDuration = settingsForGeyser.duration;
+                    float timer = __instance.sm.expirationTimer.Get(__instance);
+                    __instance.enhancementDuration = Mathf.Max(600f, ad.SAVED_DURATION, timer);
                     __instance.currentGeyserModification.massPerCycleModifier = __instance.currentGeyserModification.massPerCycleModifier * Option.Geyser_Ratio * ad.UserMaxCapacity;
                     __instance.currentGeyserModification.temperatureModifier = __instance.currentGeyserModification.temperatureModifier * Option.Geyser_Ratio * ad.UserMaxCapacity;
                     assignedGeyser.Trigger(1763323737, null);
@@ -207,6 +208,41 @@ namespace GeoTuner_mod
             }
 
 
+        }
+
+
+        [HarmonyPatch(typeof(GeoTuner), "ResetExpirationTimer")]
+
+        private static class GeoTuner_ResetExpirationTimer_Pre
+        {
+            public static bool Prefix(GeoTuner.Instance smi)
+            {
+                Geyser assignedGeyser = smi.GetAssignedGeyser();
+
+                if (assignedGeyser == null)
+                {
+                    smi.sm.expirationTimer.Set(0f, smi);
+
+                    return false;
+                }
+
+                float learning = 0f;
+
+                WorkerBase worker = smi.workable.worker;
+                if (worker != null)
+                {
+                    learning = worker.GetAttributes().Get(Db.Get().Attributes.Learning).GetTotalValue();
+                }
+
+                float scaled = smi.def.GetSettingsForGeyser(assignedGeyser).duration * (1f + learning * 0.025f);
+                smi.sm.expirationTimer.Set(scaled, smi);
+                smi.enhancementDuration = scaled;
+
+                GeoTunerAdjustable ad = smi.gameObject.AddOrGet<GeoTunerAdjustable>();
+                ad.SAVED_DURATION = scaled;
+
+                return false;
+            }
         }
 
 
