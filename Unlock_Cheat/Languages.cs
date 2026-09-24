@@ -10,9 +10,13 @@ namespace Unlock_Cheat
             {
                 public class MUTATOR
                 {
-                    public static LocString NAME = "变异";
+                    public static LocString NAME = "手动变异";
 
-                    public static LocString TOOLTIP = "将种子或植物随机变异.";
+                    public static LocString TOOLTIP = "将种子或植物定向变异.";
+
+                    public static LocString CLOSE = "关闭";
+
+                    public static LocString CANCEL = "取消变异";
                 }
 
                 public class IDENTIFY_MUTATION

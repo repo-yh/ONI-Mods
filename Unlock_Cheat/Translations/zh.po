@@ -60,13 +60,23 @@ msgstr "分析种子不需要<link=\"GENETICANALYSISSTATION\">植物分析仪</l
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.NAME"
-msgid "变异"
-msgstr "变异"
+msgid "手动变异"
+msgstr "手动变异"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP"
-msgid "将种子或植物随机变异."
-msgstr "将种子或植物随机变异."
+msgid "将种子或植物定向变异."
+msgstr "将种子或植物定向变异."
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.CLOSE
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.CLOSE"
+msgid "关闭"
+msgstr "关闭"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.CANCEL
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.CANCEL"
+msgid "取消变异"
+msgstr "取消变异"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME"

@@ -59,13 +59,11 @@ namespace Unlock_Cheat.MutantPlants
             }
         }
 
-        internal static void Mutator(this MutantPlant mutant)
+        internal static void Mutator(this MutantPlant mutant, string mutationID)
         {
-
-           // List<string> strings = new List<string> { };
-            if (mutant != null)
+            if (mutant != null && !string.IsNullOrEmpty(mutationID))
             {
-                mutant.Mutate();
+                mutant.SetSubSpecies(new List<string> { mutationID });
 
                 mutant.ApplyMutator();
 
