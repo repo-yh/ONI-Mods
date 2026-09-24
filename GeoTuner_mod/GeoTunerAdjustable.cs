@@ -177,5 +177,8 @@ namespace GeoTuner_mod
 
         [Serialize]
         private float MAX_GEOTUNED = 1f;
+
+        [Serialize]
+        public float SAVED_DURATION = 600f;
     }
 }
