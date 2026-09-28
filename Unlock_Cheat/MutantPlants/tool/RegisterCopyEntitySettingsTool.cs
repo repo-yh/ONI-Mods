@@ -42,7 +42,12 @@ namespace Unlock_Cheat.MutantPlants.CopySettingPatch
             });
             foreach (KPrefabID kprefabID in Assets.Prefabs)
             {
-                componentMapper.ApplyMap(kprefabID.gameObject);
+                GameObject go = kprefabID.gameObject;
+                componentMapper.ApplyMap(go);
+                if (go.GetComponent<MutantPlant>() != null)
+                {
+                    go.AddComponent<PlantMutationOptionsController>();
+                }
             }
         }
     }
@@ -63,17 +68,15 @@ namespace Unlock_Cheat.MutantPlants.CopySettingPatch
 
         public void ApplyMap(GameObject go, Func<T, bool> shouldAdd)
         {
-            var typeToAdd = GetTypeToAdd(go, shouldAdd);
-            if (typeToAdd != null)
+            foreach (var typeToAdd in GetTypesToAdd(go, shouldAdd))
                 go.AddComponent(typeToAdd);
         }
 
-        private Type GetTypeToAdd(GameObject go, Func<T, bool> shouldAdd)
+        private IEnumerable<Type> GetTypesToAdd(GameObject go, Func<T, bool> shouldAdd)
         {
             foreach (var (flagCmp, addCmp, filter) in map)
                 if (flagCmp != null && HasComponentOrDef(flagCmp, go) && shouldAdd(filter))
-                    return addCmp;
-            return null;
+                    yield return addCmp;
 
             bool HasComponentOrDef(Type cmpOrDef, GameObject go) => go.GetComponent(cmpOrDef) ?? go.GetDef(cmpOrDef) != null;
         }
