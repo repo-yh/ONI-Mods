@@ -17,7 +17,11 @@ namespace Unlock_Cheat.MutantPlants
                 if ( (mutant.IsOriginal && !kprefabID.HasTag(GameTags.PlantBranch)) || kprefabID.HasTag(GameTags.Seed) || kprefabID.HasTag(GameTags.CropSeed) || 
                     (kprefabID.HasTag(GameTags.MutatedSeed)  && (SingletonOptions<Options>.Instance.MutantPlant_Mult  )))
                 {
-                    KIconButtonMenu.ButtonInfo button = new KIconButtonMenu.ButtonInfo("action_select_research", Languages.UI.USERMENUACTIONS.MUTATOR.NAME, new System.Action(mutant.Mutator), global::Action.NumActions, null, null, null, Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP, true);
+
+                    PlantMutationOptionsController Panel = mutant.GetComponent<PlantMutationOptionsController>();
+
+                    KIconButtonMenu.ButtonInfo button = new KIconButtonMenu.ButtonInfo("action_select_research", (Panel != null && Panel.IsPanelOpen) ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME : Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME, new System.Action(Panel.Toggle), global::Action.NumActions, null, null, null,
+(Panel != null && Panel.IsPanelOpen) ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP : Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP, true);
                     Game.Instance.userMenu.AddButton(mutant.gameObject, button, 1f);
 
                     }

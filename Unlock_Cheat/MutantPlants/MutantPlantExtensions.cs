@@ -24,11 +24,9 @@ namespace Unlock_Cheat.MutantPlants
 
 
                 int count = kvp.Value.RemoveAll(e => e.mutationIDs.Contains("SelfHarvest"));
-                Debug.LogFormat ("[测试] {0} 删除了：{1}" ,kvp.Key.Name, count);
             }
 
           int count1=  PlantSubSpeciesCatalog.Instance.identifiedSubSpecies.RemoveWhere(e => e.Name.Contains("SelfHarvest"));
-            Debug.LogFormat("[测试] {0} 删除了：{1}", "identifiedSubSpecies", count1);
 
 
             if (allSubSpeciesForSpecies != null && !allSubSpeciesForSpecies.Contains(speciesInfo))

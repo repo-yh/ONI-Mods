@@ -1,13 +1,123 @@
+using EventSystem2Syntax;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using static DiscreteShadowCaster;
 
 namespace Unlock_Cheat.MutantPlants
 {
     [SkipSaveFileSerialization]
-    public class PlantMutationOptionsController : KMonoBehaviour, FewOptionSideScreen.IFewOptionSideScreen
+    public class PlantMutationOptionsController : KMonoBehaviour, FewOptionSideScreen.IFewOptionSideScreen, ISidescreenButtonControl
     {
+        public bool IsPanelOpen { get; private set; }
+
+        public void Toggle()
+        {
+            this.IsPanelOpen = !this.IsPanelOpen;
+            base.Trigger(493375141, null);
+            if (this.selectable == null || !this.selectable.IsSelected || UIScheduler.Instance == null)
+            {
+                return;
+            }
+            UIScheduler.Instance.ScheduleNextFrame("refresh standalone geyser conversion", delegate (object _)
+            {
+                if (this == null || this.selectable == null || !this.selectable.IsSelected || SelectTool.Instance == null)
+                {
+                    return;
+                }
+                SelectTool.Instance.Select(null, true);
+                SelectTool.Instance.Select(this.selectable, true);
+            }, null, null);
+        }
+
+        public string SidescreenButtonText
+        {
+            get
+            {
+                return Languages.UI.USERMENUACTIONS.MUTATORBUTTON.NAME;
+            }
+        }
+
+
+        public string SidescreenButtonTooltip
+        {
+            get
+            {
+
+                return Languages.UI.USERMENUACTIONS.MUTATORBUTTON.TOOLTIP;
+            }
+        }
+
+        public void SetButtonTextOverride(ButtonMenuTextOverride textOverride)
+        {
+
+        }
+
+        public bool SidescreenEnabled()
+        {
+
+            return IsPanelOpen;
+        }
+
+
+        public bool SidescreenButtonInteractable()
+        {
+
+            return true;
+        }
+
+        public void OnSidescreenButtonPressed()
+        {
+
+
+            MutantPlant component = base.GetComponent<MutantPlant>();
+
+            if (!component)
+            {
+                return;
+
+            }
+            if (selectedOptionTag == Tag.Invalid) {
+
+                PopFXManager.Instance.SpawnFX(PopFXManager.Instance.sprite_Resource, Languages.UI.USERMENUACTIONS.MUTATORBUTTON.ALERT, component.transform, 3f, false);
+                return;
+
+            }
+
+            {
+
+            }
+            component.SetSubSpecies(new List<string> { selectedOptionTag.Name });
+            component.ApplyMutator();
+            //SelectTool.Instance.Select(null, true);
+            //SelectTool.Instance.Select(this.selectable, true);
+            Toggle();
+            Game.Instance.Trigger(-1503271301, this.gameObject);
+
+
+        }
+
+        [MyCmpReq]
+        private KSelectable selectable;
+        public int HorizontalGroupID()
+        {
+            return -1;
+        }
+        public int ButtonSideScreenSortOrder()
+        {
+            return 60;
+        }
+
+        public string SidescreenTitle
+        {
+            get
+            {
+                return Languages.UI.USERMENUACTIONS.MUTATOR.NAME;
+            }
+        }
         public FewOptionSideScreen.IFewOptionSideScreen.Option[] GetOptions()
         {
             MutantPlant mutant = GetComponent<MutantPlant>();

@@ -1,10 +1,46 @@
-using System.Collections.Generic;
-using System.Reflection;
 using HarmonyLib;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using static DiscreteShadowCaster;
 
 namespace Unlock_Cheat.MutantPlants
 {
+
+    [HarmonyPatch(typeof(FewOptionSideScreen), "IsValidForTarget")]
+    internal static class StandaloneConversionListValidationPatch
+    {
+        private static bool Prefix(GameObject target, ref bool __result)
+        {
+            if (target == null || target.GetComponent<PlantMutationOptionsController>() == null)
+            {
+                return true;
+            }
+            PlantMutationOptionsController component = target.GetComponent<PlantMutationOptionsController>();
+            MutantPlant component1 = target.GetComponent<MutantPlant>();
+
+            __result = component.IsPanelOpen;
+            return false;
+        }
+    }
+
+    //[HarmonyPatch(typeof(ButtonMenuSideScreen), "IsValidForTarget")]
+    //internal static class StandaloneButtonMenuValidationPatch
+    //{
+    //    private static bool Prefix(GameObject target, ref bool __result)
+    //    {
+    //        if (target == null || target.GetComponent<MutantPlant>() == null)
+    //        {
+    //            return true;
+    //        }
+    //        MutantPlant component1 = target.GetComponent<MutantPlant>();
+
+    //        __result = target.GetComponents<ISidescreenButtonControl>().Any((ISidescreenButtonControl control) => control.SidescreenEnabled());
+    //        return false;
+    //    }
+    //}
+
     [HarmonyPatch(typeof(DetailsScreen), "OnPrefabInit")]
     public static class DetailsScreenSideScreenDumpPatch
     {
