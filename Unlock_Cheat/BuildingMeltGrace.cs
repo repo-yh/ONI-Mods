@@ -93,7 +93,7 @@ namespace Unlock_Cheat.BuildingMeltGrace
             Notifier notifier = go.AddOrGet<Notifier>();
             Notification notification = new Notification(
                 Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME,
-                NotificationType.Tutorial,
+                NotificationType.Bad,
                 (List<Notification> notificationList, object data) => string.Concat(
                     Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP,
                     notificationList.ReduceMessages(countNames: false)),
