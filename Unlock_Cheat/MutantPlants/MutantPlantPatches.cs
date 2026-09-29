@@ -17,8 +17,15 @@ namespace Unlock_Cheat.MutantPlants
                 if ( (mutant.IsOriginal && !kprefabID.HasTag(GameTags.PlantBranch)) || kprefabID.HasTag(GameTags.Seed) || kprefabID.HasTag(GameTags.CropSeed) || 
                     (kprefabID.HasTag(GameTags.MutatedSeed)  && (SingletonOptions<Options>.Instance.MutantPlant_Mult  )))
                 {
-                    KIconButtonMenu.ButtonInfo button = new KIconButtonMenu.ButtonInfo("action_select_research", Languages.UI.USERMENUACTIONS.MUTATOR.NAME, new System.Action(mutant.Mutator), global::Action.NumActions, null, null, null, Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP, true);
-                    Game.Instance.userMenu.AddButton(mutant.gameObject, button, 1f);
+
+                    PlantMutationOptionsController panel = mutant.GetComponent<PlantMutationOptionsController>();
+                    if (panel != null)
+                    {
+                        bool isOpen = panel.IsPanelOpen;
+                        KIconButtonMenu.ButtonInfo button = new KIconButtonMenu.ButtonInfo("action_select_research", isOpen ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME : Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME, new System.Action(panel.Toggle), global::Action.NumActions, null, null, null,
+isOpen ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP : Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP, true);
+                        Game.Instance.userMenu.AddButton(mutant.gameObject, button, 1f);
+                    }
 
                     }
 
@@ -116,6 +123,8 @@ namespace Unlock_Cheat.MutantPlants
         {
             public static void Postfix(Crop __instance, Tag cropID, GameObject __result)
             {
+                if (__result == null)
+                    return;
 
                 if (!__instance.gameObject.TryGetComponent<SeedProducer>(out var seedProducer))
                     return;
@@ -139,7 +148,7 @@ namespace Unlock_Cheat.MutantPlants
         [HarmonyPatch(typeof(PlantMutation), "GetTooltip")]
         public static class PlantMutation_GetTooltip
         {
-            public static void Prefix(PlantMutation __instance, bool __state)
+            public static void Prefix(PlantMutation __instance, ref bool __state)
             {
                 if (!__instance.originalMutation)
                 {

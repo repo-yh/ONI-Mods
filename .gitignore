@@ -13,3 +13,5 @@ Distribute/
 DlcUnlockPatcher/build/
 DlcUnlockPatcher/dist/
 DlcUnlockPatcher/*.zip
+./qwen/**
+.qwen

@@ -15,6 +15,24 @@ namespace Unlock_Cheat
                     public static LocString TOOLTIP = "将种子或植物随机变异.";
                 }
 
+                public class MUTATORMENU
+                {
+                    public static LocString OPENNAME = "选择变异";
+                    public static LocString CLOSENAME = "关闭变异";
+
+                    public static LocString OPENTOOLTIP = "打开变异选择菜单.";
+                    public static LocString CLOSETOOLTIP = "关闭变异选择菜单.";
+                }
+
+                public class MUTATORBUTTON
+                {
+                    public static LocString NAME = "确认变异";
+
+                    public static LocString TOOLTIP = "将应用所选择的变异.";
+
+                    public static LocString ALERT = "需要选择一个变异类型";
+                }
+
                 public class IDENTIFY_MUTATION
                 {
                     public static LocString NAME = "分析";
@@ -29,7 +47,7 @@ namespace Unlock_Cheat
 
                     public static LocString PLANT_DO_NOT_SELFHARVEST = "禁用自动掉落(需要保存加载生效)";
 
-                    public static LocString Reload = "需要保存加载生效";
+                    public static LocString Reload = "可能需要保存加载生效";
 
                 }
                 public class CANCEL_HARVEST_WHEN_READY
@@ -62,6 +80,16 @@ namespace Unlock_Cheat
 
                 public static LocString NO_OWNED = "这个皮肤你暂未拥有,只有使用权";
                 public static LocString LAST_OWNED = "这个皮肤数量是你拥有的<color=#ff0000ff>最后的一件</color>，分解后就没有了";
+            }
+
+            public class NOTIFICATIONS
+            {
+                public class BUILDING_MELT_WARNING
+                {
+                    public static LocString NAME = "即将融化";
+
+                    public static LocString TOOLTIP = "以下建筑已超过材料熔点，将在宽限期后融化:";
+                }
             }
 
             public class NUCLEARRESEARCHCENTER
