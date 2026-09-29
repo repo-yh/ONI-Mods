@@ -103,7 +103,7 @@ namespace DlcUnlockPatcher
             }
         }
 
-        private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly? OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var name = new AssemblyName(args.Name).Name;
             foreach (var dir in GetSearchDirs())

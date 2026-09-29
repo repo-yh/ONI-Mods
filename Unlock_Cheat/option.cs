@@ -41,6 +41,10 @@ namespace Unlock_Cheat
         public bool CircuitOverloaded { get; set; }
 
         [JsonProperty]
+        [Option("建筑融化宽限期", "建筑超过材料熔点后不立即融化,进入30秒宽限期,期内降温则取消,持续超温到期才融化", null)]
+        public bool BuildingMeltGrace { get; set; }
+
+        [JsonProperty]
         [Option("存储箱内容物隔离", "建筑内部存储箱不与外界温度交换", null)]
         public bool Storage_Patch { get; set; } = true;
 
