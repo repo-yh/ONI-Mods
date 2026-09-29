@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using static DiscreteShadowCaster;
 
 namespace Unlock_Cheat.MutantPlants
 {
@@ -13,13 +12,11 @@ namespace Unlock_Cheat.MutantPlants
     {
         private static bool Prefix(GameObject target, ref bool __result)
         {
-            if (target == null || target.GetComponent<PlantMutationOptionsController>() == null)
+            PlantMutationOptionsController component = target != null ? target.GetComponent<PlantMutationOptionsController>() : null;
+            if (component == null)
             {
                 return true;
             }
-            PlantMutationOptionsController component = target.GetComponent<PlantMutationOptionsController>();
-            MutantPlant component1 = target.GetComponent<MutantPlant>();
-
             __result = component.IsPanelOpen;
             return false;
         }
