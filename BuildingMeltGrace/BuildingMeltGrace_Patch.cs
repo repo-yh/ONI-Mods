@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
+using Unlock_Cheat;
 
-namespace Unlock_Cheat.BuildingMeltGrace
+namespace BuildingMeltGrace
 {
     // sim 判定融化后不立即执行：首条 melted 消息入宽限名单并预警，
     // 期满且仍超温才由扫描器放行执行真融化（官方 DoMelt 自带红色通知）
@@ -117,6 +118,25 @@ namespace Unlock_Cheat.BuildingMeltGrace
         public static void Postfix(Game __instance)
         {
             __instance.gameObject.AddOrGet<BuildingMeltGraceMonitor>();
+        }
+    }
+}
+
+namespace Unlock_Cheat
+{
+    public static partial class Languages
+    {
+        public partial class UI
+        {
+            public class NOTIFICATIONS
+            {
+                public class BUILDING_MELT_WARNING
+                {
+                    public static LocString NAME = "即将融化";
+
+                    public static LocString TOOLTIP = "以下建筑已超过材料熔点，将在30秒宽限期后融化:";
+                }
+            }
         }
     }
 }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 namespace Unlock_Cheat
 {
-    public static class Languages
+    public static partial class Languages
     {
-        public class UI
+        public partial class UI
         {
             public class USERMENUACTIONS
             {
@@ -80,16 +80,6 @@ namespace Unlock_Cheat
 
                 public static LocString NO_OWNED = "这个皮肤你暂未拥有,只有使用权";
                 public static LocString LAST_OWNED = "这个皮肤数量是你拥有的<color=#ff0000ff>最后的一件</color>，分解后就没有了";
-            }
-
-            public class NOTIFICATIONS
-            {
-                public class BUILDING_MELT_WARNING
-                {
-                    public static LocString NAME = "即将融化";
-
-                    public static LocString TOOLTIP = "以下建筑已超过材料熔点，将在宽限期后融化:";
-                }
             }
 
             public class NUCLEARRESEARCHCENTER

@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not Included"
+"POT Version: 2.0"
+
+#. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME
+msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME"
+msgid "即将融化"
+msgstr "即将融化"
+
+#. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
+msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
+msgstr "以下建筑已超过材料熔点，将在30秒宽限期后融化:"

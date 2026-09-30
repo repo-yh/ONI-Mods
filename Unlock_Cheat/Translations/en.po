@@ -10,8 +10,8 @@ msgstr "Melting Soon"
 
 #. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
-msgid "以下建筑已超过材料熔点，将在宽限期后融化:"
-msgstr "The following buildings have exceeded their materials' melting point and will melt after the grace period:"
+msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
+msgstr "The following buildings have exceeded their materials' melting point and will melt after a 30s grace period:"
 
 #. Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE
 msgctxt "Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE"

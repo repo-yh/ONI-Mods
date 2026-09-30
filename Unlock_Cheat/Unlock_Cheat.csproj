@@ -27,6 +27,7 @@
 	<ItemGroup>
 	  <Compile Include="..\NuclearResearch\NuclearResearch_Patch.cs" Link="NuclearResearch_Patch.cs" />
 	  <Compile Include="..\Storage_Isolation\Storage_Isolation.cs" Link="Storage_Isolation.cs" />
+	  <Compile Include="..\BuildingMeltGrace\BuildingMeltGrace_Patch.cs" Link="BuildingMeltGrace_Patch.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
