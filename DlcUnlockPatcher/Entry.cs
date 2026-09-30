@@ -10,6 +10,7 @@ namespace DlcUnlockPatcher
     {
         private static bool _ran;
         private static bool _resolveHooked;
+        private static Harmony? _harmony;
         private static Dictionary<string, string> _proxyIni = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public static bool LogEnabled = true;
@@ -45,9 +46,14 @@ namespace DlcUnlockPatcher
                 }
                 LogDoorstopEnv();
                 Log("entry, match_id=" + Patches.MatchId);
-                var harmony = new Harmony("dlc.unlock.patcher");
-                harmony.PatchAll(typeof(Patches).Assembly);
+                _harmony = new Harmony("dlc.unlock.patcher");
+                _harmony.PatchAll(typeof(Patches).Assembly);
                 Log("patched");
+                if (IsAssemblyLoaded("Assembly-CSharp"))
+                {
+                    // Doorstop 晚启动错过加载事件时的兜底：Assembly-CSharp 已加载则直接注册
+                    RunLocalizationPatch();
+                }
             }
             catch (Exception ex)
             {
@@ -57,10 +63,38 @@ namespace DlcUnlockPatcher
 
         private static void OnAssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
-            if (args.LoadedAssembly.GetName().Name == "Assembly-CSharp-firstpass")
+            var name = args.LoadedAssembly.GetName().Name;
+            if (name == "Assembly-CSharp-firstpass")
             {
                 Run();
             }
+            else if (name == "Assembly-CSharp")
+            {
+                // KMod.Manager / Localization 在 Assembly-CSharp，加载后才可注册提前翻译 patch
+                RunLocalizationPatch();
+            }
+        }
+
+        private static void RunLocalizationPatch()
+        {
+            if (_harmony == null)
+            {
+                _harmony = new Harmony("dlc.unlock.patcher");
+            }
+            EarlyLocalizationPatches.Patch(_harmony);
+        }
+
+        private static bool IsAssemblyLoaded(string name)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (var i = 0; i < assemblies.Length; i++)
+            {
+                if (assemblies[i].GetName().Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static bool IsFirstpassLoaded()
@@ -211,7 +245,7 @@ namespace DlcUnlockPatcher
             return _proxyIni;
         }
 
-        private static void Log(string msg)
+        internal static void Log(string msg)
         {
             if (!LogEnabled)
             {
