@@ -6,145 +6,144 @@ msgstr ""
 #. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME
 msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME"
 msgid "即将融化"
-msgstr "即将融化"
+msgstr "Melting Soon"
 
 #. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
 msgid "以下建筑已超过材料熔点，将在宽限期后融化:"
-msgstr "以下建筑已超过材料熔点，将在宽限期后融化:"
+msgstr "The following buildings have exceeded their materials' melting point and will melt after the grace period:"
 
 #. Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE
 msgctxt "Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE"
 msgid "辐射粒子存储值"
-msgstr "辐射粒子存储值"
+msgstr "Radbolt Storage"
 
 #. Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TOOLTIP"
 msgid "当前能储存<b>{0}</b><style=\"KKeyword\">辐射粒子</style>"
-msgstr "当前能储存<b>{0}</b><style=\"KKeyword\">辐射粒子</style>"
+msgstr "Can currently store <b>{0}</b><style=\"KKeyword\">Radbolt</style>"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.NAME"
 msgid "禁用复制人收获"
-msgstr "禁用复制人收获"
+msgstr "Disable Duplicant Harvest"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.PLANT_SELFHARVEST
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.PLANT_SELFHARVEST"
 msgid "启用自动掉落"
-msgstr "启用自动掉落"
+msgstr "Enable auto-drop"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.CANCEL_HARVEST_WHEN_READY.TOOLTIP"
 msgid "复制人不自动收获这株植物,改为成熟后自动掉落"
-msgstr "复制人不自动收获这株植物,改为成熟后自动掉落"
+msgstr "Duplicants will not automatically harvest this plant; it will drop automatically when ready"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.NAME"
 msgid "启用复制人收获"
-msgstr "启用复制人收获"
+msgstr "Enable Duplicant Harvest"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.PLANT_DO_NOT_SELFHARVEST
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.PLANT_DO_NOT_SELFHARVEST"
 msgid "禁用自动掉落(需要保存加载生效)"
-msgstr "禁用自动掉落(需要保存加载生效)"
+msgstr "Disable auto-drop (requires a save and reload to take effect)"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.Reload
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.Reload"
 msgid "可能需要保存加载生效"
-msgstr "可能需要保存加载生效"
+msgstr "May require a save and reload to take effect"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.TOOLTIP"
 msgid "当这株植物成熟时，复制人会收获,取消自动收获"
-msgstr "当这株植物成熟时，复制人会收获,取消自动收获"
+msgstr "When this plant is ready, Duplicants will harvest it. Disables auto-drop"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.IDENTIFY_MUTATION.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.IDENTIFY_MUTATION.NAME"
 msgid "分析"
-msgstr "分析"
+msgstr "Analyze"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.IDENTIFY_MUTATION.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.IDENTIFY_MUTATION.TOOLTIP"
 msgid "分析种子不需要<link=\"GENETICANALYSISSTATION\">植物分析仪</link>"
-msgstr "分析种子不需要<link=\"GENETICANALYSISSTATION\">植物分析仪</link>"
+msgstr "Analyzing seeds does not require the <link=\"GENETICANALYSISSTATION\">Botanical Analyzer</link>"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.NAME"
 msgid "变异"
-msgstr "变异"
+msgstr "Mutate"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP"
 msgid "将种子或植物随机变异."
-msgstr "将种子或植物随机变异."
+msgstr "Randomly mutates the seed or plant."
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.ALERT
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.ALERT"
 msgid "需要选择一个变异类型"
-msgstr "需要选择一个变异类型"
+msgstr "A mutation type must be selected"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.NAME"
 msgid "确认变异"
-msgstr "确认变异"
+msgstr "Confirm Mutation"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.TOOLTIP"
 msgid "将应用所选择的变异."
-msgstr "将应用所选择的变异."
+msgstr "The selected mutation will be applied."
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME"
 msgid "关闭变异"
-msgstr "关闭变异"
+msgstr "Close Mutation"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP"
 msgid "关闭变异选择菜单."
-msgstr "关闭变异选择菜单."
+msgstr "Close the mutation selection menu."
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME"
 msgid "选择变异"
-msgstr "选择变异"
+msgstr "Select Mutation"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP"
 msgid "打开变异选择菜单."
-msgstr "打开变异选择菜单."
+msgstr "Open the mutation selection menu."
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME"
 msgid "禁用植物自动收获"
-msgstr "禁用植物自动收获"
+msgstr "Disable Plant Autoharvest"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_TOOLTIP"
 msgid "植物成熟时不会自动掉落(切换状态后需要保存加载一次)"
-msgstr "植物成熟时不会自动掉落(切换状态后需要保存加载一次)"
+msgstr "The plant will not drop automatically when ready (requires a save and reload after switching)"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.MutationNAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.MutationNAME"
 msgid "植物自动收获"
-msgstr "植物自动收获"
+msgstr "Plant Autoharvest"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.NAME"
 msgid "启用植物自动收获"
-msgstr "启用植物自动收获"
+msgstr "Enable Plant Autoharvest"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.TOOLTIP"
 msgid "植物成熟时自动掉落"
-msgstr "植物成熟时自动掉落"
+msgstr "Automatically drops when the plant is ready"
 
 #. Unlock_Cheat.Languages.UI.USERTEXT.LAST_OWNED
 msgctxt "Unlock_Cheat.Languages.UI.USERTEXT.LAST_OWNED"
 msgid "这个皮肤数量是你拥有的<color=#ff0000ff>最后的一件</color>，分解后就没有了"
-msgstr "这个皮肤数量是你拥有的<color=#ff0000ff>最后的一件</color>，分解后就没有了"
+msgstr "This is the <color=#ff0000ff>last one</color> of this skin you own; scrapping it means it is gone"
 
 #. Unlock_Cheat.Languages.UI.USERTEXT.NO_OWNED
 msgctxt "Unlock_Cheat.Languages.UI.USERTEXT.NO_OWNED"
 msgid "这个皮肤你暂未拥有,只有使用权"
-msgstr "这个皮肤你暂未拥有,只有使用权"
-
+msgstr "You do not own this skin yet; you only have temporary access"
