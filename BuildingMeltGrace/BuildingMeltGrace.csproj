@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Title>建筑融化宽限期</Title>
-    <Description>建筑超过材料熔点后不立即融化,进入30秒宽限期,期内降温取消并撤预警,期满仍超温才放行真融化.</Description>
+    <Title>建筑融化提醒</Title>
+    <Description>建筑超过材料熔点后不立即融化,会触发红色提醒,进入30秒宽限期,期内降温取消并撤预警,期满仍超温才放行真融化.</Description>
     <UsesPLib>false</UsesPLib>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <ILRepack>true</ILRepack>

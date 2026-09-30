@@ -68,11 +68,11 @@ namespace DlcUnlockPatcher
             {
                 Run();
             }
-            else if (name == "Assembly-CSharp")
-            {
-                // KMod.Manager / Localization 在 Assembly-CSharp，加载后才可注册提前翻译 patch
-                RunLocalizationPatch();
-            }
+            //else if (name == "Assembly-CSharp")
+            //{
+            //    // KMod.Manager / Localization 在 Assembly-CSharp，加载后才可注册提前翻译 patch
+            //    RunLocalizationPatch();
+            //}
         }
 
         private static void RunLocalizationPatch()
