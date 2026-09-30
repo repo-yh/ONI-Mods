@@ -1,8 +1,9 @@
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using HarmonyLib;
 using UnityEngine;
 using Unlock_Cheat;
+using static STRINGS.UI.ELEMENTAL;
 
 namespace BuildingMeltGrace
 {
@@ -18,7 +19,7 @@ namespace BuildingMeltGrace
         {
             if (bypassList.Remove(primary_element.gameObject))
             {
-                return true;
+                    return true;
             }
             GameObject go = primary_element.gameObject;
             if (!BuildingMeltGraceMonitor.graceList.ContainsKey(go))
@@ -67,17 +68,27 @@ namespace BuildingMeltGrace
                     finished.Add(go);
                 }
                 else if (GameClock.Instance.GetTime() - entry.FirstSeen >= GRACE_SECONDS)
-                {
-                    finished.Add(go);
-                    entry.Notice?.Clear();
-                    StructureTemperatureComponents_DoMelt_Patch.bypassList.Add(go);
-                    try
+                { 
+                    bool isMelt = true;
+                    Operational operational = go.GetComponent<Operational>();
+                    if (operational != null && operational.IsOperational)
                     {
-                        StructureTemperatureComponents.DoMelt(pe);
+                        isMelt = operational.IsOperational;
+
                     }
-                    finally
-                    {
-                        StructureTemperatureComponents_DoMelt_Patch.bypassList.Remove(go);
+                    if (isMelt) {
+
+                        finished.Add(go);
+                        entry.Notice?.Clear();
+                        StructureTemperatureComponents_DoMelt_Patch.bypassList.Add(go);
+                        try
+                        {
+                            StructureTemperatureComponents.DoMelt(pe);
+                        }
+                        finally
+                        {
+                            StructureTemperatureComponents_DoMelt_Patch.bypassList.Remove(go);
+                        }
                     }
                 }
             }
