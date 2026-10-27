@@ -3,6 +3,16 @@ msgstr ""
 "Application: Oxygen Not Included"
 "POT Version: 2.0"
 
+#. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME
+msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.NAME"
+msgid "即将融化"
+msgstr "即将融化"
+
+#. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
+msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
+msgstr "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
+
 #. Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE
 msgctxt "Unlock_Cheat.Languages.UI.NUCLEARRESEARCHCENTER.TITLE"
 msgid "辐射粒子存储值"
@@ -40,8 +50,8 @@ msgstr "禁用自动掉落(需要保存加载生效)"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.Reload
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.Reload"
-msgid "需要保存加载生效"
-msgstr "需要保存加载生效"
+msgid "可能需要保存加载生效"
+msgstr "可能需要保存加载生效"
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.HARVEST_WHEN_READY.TOOLTIP"
@@ -67,6 +77,41 @@ msgstr "变异"
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATOR.TOOLTIP"
 msgid "将种子或植物随机变异."
 msgstr "将种子或植物随机变异."
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.ALERT
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.ALERT"
+msgid "需要选择一个变异类型"
+msgstr "需要选择一个变异类型"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.NAME
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.NAME"
+msgid "确认变异"
+msgstr "确认变异"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.TOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORBUTTON.TOOLTIP"
+msgid "将应用所选择的变异."
+msgstr "将应用所选择的变异."
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSENAME"
+msgid "关闭变异"
+msgstr "关闭变异"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP"
+msgid "关闭变异选择菜单."
+msgstr "关闭变异选择菜单."
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENNAME"
+msgid "选择变异"
+msgstr "选择变异"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MUTATORMENU.OPENTOOLTIP"
+msgid "打开变异选择菜单."
+msgstr "打开变异选择菜单."
 
 #. Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME
 msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.SELFHARVEST.CANCEL_NAME"

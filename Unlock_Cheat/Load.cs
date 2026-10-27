@@ -45,7 +45,7 @@ namespace Unlock_Cheat
                 if (Options.MopTool) ManualPatch.ManualPatch_NS("Unlock_Cheat.MopTool_Patch");
                 if(Options.AutoGoToMedBed) ManualPatch.ManualPatch_NS("Unlock_Cheat.AutoGoToMedBed");
                 if(Options.Storage_Patch) ManualPatch.ManualPatch_NS("Storage_Isolation");
-                if (Options.BuildingMeltGrace) ManualPatch.ManualPatch_NS("Unlock_Cheat.BuildingMeltGrace");
+                if (Options.BuildingMeltGrace) ManualPatch.ManualPatch_NS("BuildingMeltGrace");
 
                 if (DlcManager.IsExpansion1Active()) {
                     if (Options.MutantPlant) ManualPatch.ManualPatch_NS("Unlock_Cheat.MutantPlants");
