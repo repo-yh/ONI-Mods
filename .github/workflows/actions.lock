@@ -12,7 +12,7 @@ workflows:
         - 'actions/setup-dotnet@v6.0.0'
         - 'actions/upload-artifact@v7.0.2'
         - 'microsoft/setup-msbuild@v3.0.0'
-        - 'softprops/action-gh-release@v3.0.3'
+        - 'softprops/action-gh-release@v3.0.4'
 dependencies:
     'actions/cache@v6.1.0':
         ref: 'v6.1.0'
@@ -49,8 +49,8 @@ dependencies:
         commit: 'sha1-30375c66a4eea26614e0d39710365f22f8b0af57'
         owner_id: 6154722
         repo_id: 237360465
-    'softprops/action-gh-release@v3.0.3':
-        ref: 'v3.0.3'
-        commit: 'sha1-efb35369e0ad2afab669f228072c1b0d510eae64'
+    'softprops/action-gh-release@v3.0.4':
+        ref: 'v3.0.4'
+        commit: 'sha1-8a0cd651e5b2365bd640854a3fa5dfc70e4875f3'
         owner_id: 2242
         repo_id: 204253808
