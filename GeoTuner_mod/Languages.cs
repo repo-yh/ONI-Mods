@@ -10,7 +10,7 @@ namespace GeoTuner_mod
                 {
                     public static LocString TITLE = "GEYSER_GEOTUNED";
 
-                    public static LocString TOOLTIP = "This geyser is being boosted {0} tuning tuning  by {1} " + STRINGS.UI.PRE_KEYWORD + "Geotuners" + STRINGS.UI.PST_KEYWORD;
+                    public static LocString TOOLTIP = "This geyser is being boosted {0} tuning tuning  by <b>{1}</b> of <b>{2}</b> " + STRINGS.UI.PRE_KEYWORD + "Geotuners" + STRINGS.UI.PST_KEYWORD;
                    
                     public static LocString UNITS = "tuning";
 
