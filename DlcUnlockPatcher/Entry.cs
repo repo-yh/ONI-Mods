@@ -18,6 +18,8 @@ namespace DlcUnlockPatcher
         // Doorstop 官方入口：加载后由其委托到 Doorstop.Entrypoint.Start()
         public static void Start()
         {
+            Log("patch start ");
+
             EnsureResolveHook();
             // DlcManager 在 Assembly-CSharp-firstpass，必须等它加载完才能 PatchAll
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
@@ -49,11 +51,11 @@ namespace DlcUnlockPatcher
                 _harmony = new Harmony("dlc.unlock.patcher");
                 _harmony.PatchAll(typeof(Patches).Assembly);
                 Log("patched");
-                if (IsAssemblyLoaded("Assembly-CSharp"))
-                {
-                    // Doorstop 晚启动错过加载事件时的兜底：Assembly-CSharp 已加载则直接注册
-                    RunLocalizationPatch();
-                }
+                //if (IsAssemblyLoaded("Assembly-CSharp"))
+                //{
+                //    // Doorstop 晚启动错过加载事件时的兜底：Assembly-CSharp 已加载则直接注册
+                //    RunLocalizationPatch();
+                //}
             }
             catch (Exception ex)
             {
@@ -273,6 +275,7 @@ namespace Doorstop
     {
         public static void Start()
         {
+
             DlcUnlockPatcher.Entry.Start();
         }
     }
