@@ -12,7 +12,6 @@
 	  <UsesPLib>true</UsesPLib>
 	  <UseCommons>true</UseCommons>
 
-
   </PropertyGroup>
   
   <ItemGroup>

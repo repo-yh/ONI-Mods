@@ -19,7 +19,7 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	<LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<minimumSupportedBuild>719533</minimumSupportedBuild>
+	<minimumSupportedBuild>764025</minimumSupportedBuild>
     <Configurations>Debug;Release;CI</Configurations>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>

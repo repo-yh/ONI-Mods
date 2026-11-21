@@ -101,6 +101,10 @@ namespace GeoTuner_mod
 
         protected override void OnCleanUp()
         {
+            if (option.energyConsumer && energyConsumer)
+            {
+                this.energyConsumer.BaseWattageRating = BaseWattageRating;
+            }
             base.Unsubscribe<GeoTunerAdjustable>(-905833192, GeoTunerAdjustable.OnCopySettingsDelegate,false);
             base.OnCleanUp();
         }
@@ -162,7 +166,7 @@ namespace GeoTuner_mod
         private static readonly EventSystem.IntraObjectHandler<GeoTunerAdjustable> OnCopySettingsDelegate = new EventSystem.IntraObjectHandler<GeoTunerAdjustable>(new Action<GeoTunerAdjustable, object>(GeoTunerAdjustable.OnCopySettings));
 
 
-        float BaseWattageRating = 120f;
+        private  const float BaseWattageRating = 120f;
 
         [MyCmpAdd]
         public CopyBuildingSettings copyBuildingSettings;

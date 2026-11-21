@@ -10,5 +10,25 @@ msgstr "即将融化"
 
 #. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
-msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
-msgstr "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
+msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化。冷却至熔点以下、禁用建筑或点击豁免可取消融化:"
+msgstr "以下建筑已超过材料熔点，将在30秒宽限期后融化。冷却至熔点以下、禁用建筑或点击豁免可取消融化:"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME"
+msgid "豁免融化"
+msgstr "豁免融化"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME_OFF
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME_OFF"
+msgid "取消豁免"
+msgstr "取消豁免"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP"
+msgid "该建筑将被豁免，不再融化（随存档保存）"
+msgstr "该建筑将被豁免，不再融化（随存档保存）"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP_OFF
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP_OFF"
+msgid "取消豁免：若温度仍超过熔点，将重新进入30秒融化宽限期"
+msgstr "取消豁免：若温度仍超过熔点，将重新进入30秒融化宽限期"

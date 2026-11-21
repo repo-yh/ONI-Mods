@@ -106,7 +106,8 @@ namespace Unlock_Cheat.MutantPlants
                 PlantBranchGrower.Instance smi = mutant.GetSMI<PlantBranchGrower.Instance>();
                 if (!smi.IsNullOrStopped())
                 {
-                    smi.ActionPerBranch(delegate (GameObject go)
+
+                    Action<GameObject> func = delegate (GameObject go)
                     {
                         MutantPlant mutantPlant;
                         if (go.TryGetComponent<MutantPlant>(out mutantPlant))
@@ -115,13 +116,23 @@ namespace Unlock_Cheat.MutantPlants
                             mutantPlant.ApplyMutations();
                             MutantPlantExtensions.DiscoverSilentlyAndIdentifySubSpecies(mutantPlant.GetSubSpeciesInfo());
                         }
-                    });
+                    };
+
+                    GameObject[] branches =  smi.GetExistingBranches();
+
+                    foreach (GameObject item in branches)
+                    {
+                        func(item.gameObject);
+                    }
+                    
                 }
                 DetailsScreen.Instance.Trigger(-1514841199, null);
 
             }
         }
 
+
+ 
         internal static void IdentifyMutation(this MutantPlant mutant)
         {
             if (mutant != null)

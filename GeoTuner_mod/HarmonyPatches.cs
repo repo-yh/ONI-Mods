@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using static Localization;
+using KleiFormatters;
 namespace GeoTuner_mod
 {
 
@@ -357,11 +358,11 @@ namespace GeoTuner_mod
 
 
 
-        [HarmonyPatch(typeof(Geyser), "GetDescriptors")]
+        [HarmonyPatch(typeof(Geyser), "CollectDescriptors")]
 
         private static class Geyser_GetDescriptors
         {
-            public static void Postfix(Geyser __instance, GameObject go, ref List<Descriptor> __result)
+            public static void Postfix(Geyser __instance, GameObject go, List<Descriptor> descriptors)
             {
                 List<GeoTuner.Instance> items = Components.GeoTuners.GetItems(__instance.gameObject.GetMyWorldId());
                 List<GeoTuner.Instance> GeoTuners = items.FindAll((GeoTuner.Instance x) => x.GetAssignedGeyser() == __instance);
@@ -379,37 +380,108 @@ namespace GeoTuner_mod
                     return emissionPerCycleModifier / num8 / __instance.configuration.GetOnDuration();
                 };
 
-                string text = string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.GEYSER_PRODUCTION_GEOTUNED, ElementLoader.FindElementByHash(__instance.configuration.GetElement()).name, 
-                    GameUtil.GetFormattedMass(__instance.configuration.GetEmitRate(), GameUtil.TimeSlice.PerSecond, GameUtil.MetricMassFormat.UseThreshold, true, "{0:0.#}"), 
-                    GameUtil.GetFormattedTemperature(__instance.configuration.GetTemperature(), GameUtil.TimeSlice.None, GameUtil.TemperatureInterpretation.Absolute, true, false));
+
+                Element element = ElementLoader.FindElementByHash(__instance.configuration.GetElement());
+                ValueTuple<float, GameUtil.TimeSlice> emitRate = new ValueTuple<float, GameUtil.TimeSlice>(__instance.configuration.GetEmitRate(), GameUtil.TimeSlice.PerSecond);
+                KleiStringBuilder sb = KleiStringBuilder.BorrowFromPool();
+                sb.Append(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.GEYSER_PRODUCTION_GEOTUNED);
+                sb.Replace("{0}", element.name);
+                sb.Replace<MassFormatter, ValueTuple<float, GameUtil.TimeSlice>>("{1}", emitRate);
+                sb.Replace<TemperatureFormatter, float>("{2}", __instance.configuration.GetTemperature());
+                sb.Append("\n\n");
+
                 float num2;
                 float num3;
-                string str;
-                string str2;
-                string text2;
-                string text3 = "";
+                float averageOutputChangePerTuner;
+                float totalAverageOutputChange = 0f;
+
                 float count = 0;
                 float count1 = 0;
+                int activeCount = __instance.GetAmountOfGeotunersAffectingThisGeyser();
+
+                KleiStringBuilder scratch = KleiStringBuilder.BorrowFromPool();
+                KleiStringBuilder scratch1 = KleiStringBuilder.BorrowFromPool();
+                Studyable studyable = __instance.GetComponent<Studyable>();
+                bool flag8 = studyable && !studyable.Studied;
                 foreach (GeoTuner.Instance instance in GeoTuners)
                 {
+                    count1 = instance.GetComponent<GeoTunerAdjustable>().UserMaxCapacity;
+
+                    scratch.Append("\n");
+                    scratch.Append("    • ");
+                    scratch.Append(count1);
+                    scratch.Append(STRINGS.UI.UISIDESCREENS.GEOTUNERSIDESCREEN.STUDIED_TOOLTIP_GEOTUNER_MODIFIER_ROW_TITLE);
+
                     num2 = (Geyser.temperatureModificationMethod == Geyser.ModificationMethod.Percentages) ? (instance.currentGeyserModification.temperatureModifier * __instance.configuration.geyserType.temperature) : instance.currentGeyserModification.temperatureModifier;
                     num3 = func((Geyser.massModificationMethod == Geyser.ModificationMethod.Percentages) ? (instance.currentGeyserModification.massPerCycleModifier * __instance.configuration.scaledRate) : instance.currentGeyserModification.massPerCycleModifier);
-                    str = ((num2 > 0f) ? "+" : "") + GameUtil.GetFormattedTemperature(num2, GameUtil.TimeSlice.None, GameUtil.TemperatureInterpretation.Relative, true, false);
-                    str2 = ((num3 > 0f) ? "+" : "") + GameUtil.GetFormattedMass(num3, GameUtil.TimeSlice.PerSecond, GameUtil.MetricMassFormat.UseThreshold, true, "{0:0.##}");
-                    count1 = instance.GetComponent<GeoTunerAdjustable>().UserMaxCapacity;
-                    text2 = "\n    • " + count1+ STRINGS.UI.UISIDESCREENS.GEOTUNERSIDESCREEN.STUDIED_TOOLTIP_GEOTUNER_MODIFIER_ROW_TITLE.ToString();
-                    text2 = text2 + str2 + " " + str;
+
+                    bool flag4 = num3 > 0f;
+                    if (flag4)
+                    {
+                        scratch.Append('+');
+                    }
+                    scratch.Append<MassFormatter, ValueTuple<float, GameUtil.TimeSlice, GameUtil.MetricMassFormat, bool, string>>(new ValueTuple<float, GameUtil.TimeSlice, GameUtil.MetricMassFormat, bool, string>(num3, GameUtil.TimeSlice.PerSecond, GameUtil.MetricMassFormat.UseThreshold, true, "0.##"));
+                    scratch.Append(' ');
+                    bool flag5 = num2 > 0f;
+                    if (flag5)
+                    {
+                        scratch.Append('+');
+                    }
+                    scratch.Append<TemperatureFormatter, ValueTuple<float, GameUtil.TimeSlice, GameUtil.TemperatureInterpretation>>(new ValueTuple<float, GameUtil.TimeSlice, GameUtil.TemperatureInterpretation>(num2, GameUtil.TimeSlice.None, GameUtil.TemperatureInterpretation.Relative));
                     count += count1;
-                    text3 += text2;
+
+                    if (!flag8)
+                    {
+                        averageOutputChangePerTuner = (Geyser.massModificationMethod == Geyser.ModificationMethod.Percentages) ? (instance.currentGeyserModification.massPerCycleModifier * 100f) : (instance.currentGeyserModification.massPerCycleModifier * 100f / __instance.configuration.scaledRate);
+                        totalAverageOutputChange += averageOutputChangePerTuner;
+
+                        scratch1.Append('\n');
+                        scratch1.Append("    • ");
+                        scratch1.Append(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.GEYSER_YEAR_AVR_OUTPUT_BREAKDOWN_ROW);
+                        scratch1.Append<PositiveSignFormatter<FloatToStringFormatter, ValueTuple<float, string>>, ValueTuple<ValueTuple<float, string>, bool>>(new ValueTuple<ValueTuple<float, string>, bool>(new ValueTuple<float, string>(averageOutputChangePerTuner, "0.0"),
+                            averageOutputChangePerTuner > 0f));
+                        scratch1.Append('%');
+                    }
+
                 }
-                text += "\n" + string.Format(UI.UISIDESCREENS.GEOTUNERADJUSTABLE.TOOLTIP, count, num);
-                text += "\n" + text3;
 
-                string arg = ElementLoader.FindElementByHash(__instance.configuration.GetElement()).tag.ProperName();
+                sb.Append(UI.UISIDESCREENS.GEOTUNERADJUSTABLE.TOOLTIP);
+                sb.Replace("{0}", count);
+                sb.Replace("{1}", activeCount);
+                sb.Replace("{2}", num);
 
-                __result[0] = new Descriptor(string.Format(STRINGS.UI.BUILDINGEFFECTS.GEYSER_PRODUCTION, arg, GameUtil.GetFormattedMass(__instance.configuration.GetEmitRate(),
-                    GameUtil.TimeSlice.PerSecond, GameUtil.MetricMassFormat.UseThreshold, true, "{0:0.#}"), GameUtil.GetFormattedTemperature(__instance.configuration.GetTemperature(),
-                    GameUtil.TimeSlice.None, GameUtil.TemperatureInterpretation.Absolute, true, false)), text, Descriptor.DescriptorType.Effect, false);
+                sb.Append(scratch);
+                scratch.Dispose();
+
+                descriptors[0] = new Descriptor(descriptors[0].text, sb.CopyContent(), Descriptor.DescriptorType.Effect, false);
+
+                if (flag8)
+                {
+                    sb.Dispose();
+                    scratch1.Dispose();
+                    return;
+                }
+                sb.Clear();
+                sb.Append(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.GEYSER_YEAR_AVR_OUTPUT);
+
+                ValueTuple<float, GameUtil.TimeSlice> averageEmission = new ValueTuple<float, GameUtil.TimeSlice>(__instance.configuration.GetAverageEmission(), GameUtil.TimeSlice.PerSecond);
+
+                sb.Replace<MassFormatter, ValueTuple<float, GameUtil.TimeSlice>>("{average}", averageEmission);
+                sb.Replace("{element}", __instance.configuration.geyserType.element.CreateTag().ProperName());
+
+
+                sb.Append("\n\n");
+
+                sb.Append(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.GEYSER_YEAR_AVR_OUTPUT_BREAKDOWN_TITLE);
+                sb.Append<PositiveSignFormatter<FloatToStringFormatter, ValueTuple<float, string>>, ValueTuple<ValueTuple<float, string>, bool>>(new ValueTuple<ValueTuple<float, string>, bool>(new ValueTuple<float, string>(totalAverageOutputChange, "0.0"), 
+                    totalAverageOutputChange > 0f));
+                    sb.Append('%');
+                    sb.Append(scratch1);
+                scratch1.Dispose();
+                // 最后一个元素
+
+                descriptors[descriptors.Count - 1] = new Descriptor(descriptors[descriptors.Count - 1].text, sb.TakeContent(), Descriptor.DescriptorType.Effect, false);
+
             }
         }
 

@@ -10,5 +10,25 @@ msgstr "Melting Soon"
 
 #. Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP
 msgctxt "Unlock_Cheat.Languages.UI.NOTIFICATIONS.BUILDING_MELT_WARNING.TOOLTIP"
-msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化:"
-msgstr "The following buildings have exceeded their materials' melting point and will melt after a 30s grace period:"
+msgid "以下建筑已超过材料熔点，将在30秒宽限期后融化。冷却至熔点以下、禁用建筑或点击豁免可取消融化:"
+msgstr "The following buildings have exceeded their materials' melting point and will melt after a 30s grace period. Cool them below melting point, disable them, or use the Exempt button to cancel the melt:"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME"
+msgid "豁免融化"
+msgstr "Exempt from Melting"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME_OFF
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.NAME_OFF"
+msgid "取消豁免"
+msgstr "Cancel Exemption"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP"
+msgid "该建筑将被豁免，不再融化（随存档保存）"
+msgstr "This building will no longer melt (saved with the game)"
+
+#. Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP_OFF
+msgctxt "Unlock_Cheat.Languages.UI.USERMENUACTIONS.MELT_EXEMPT.TOOLTIP_OFF"
+msgid "取消豁免：若温度仍超过熔点，将重新进入30秒融化宽限期"
+msgstr "Cancel exemption: if still above the melting point, the building re-enters the 30s melting grace period"

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 
 namespace DlcUnlockPatcher
 {
@@ -18,6 +19,8 @@ namespace DlcUnlockPatcher
         // Doorstop 官方入口：加载后由其委托到 Doorstop.Entrypoint.Start()
         public static void Start()
         {
+            Log("patch start ");
+
             EnsureResolveHook();
             // DlcManager 在 Assembly-CSharp-firstpass，必须等它加载完才能 PatchAll
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
@@ -49,11 +52,11 @@ namespace DlcUnlockPatcher
                 _harmony = new Harmony("dlc.unlock.patcher");
                 _harmony.PatchAll(typeof(Patches).Assembly);
                 Log("patched");
-                if (IsAssemblyLoaded("Assembly-CSharp"))
-                {
-                    // Doorstop 晚启动错过加载事件时的兜底：Assembly-CSharp 已加载则直接注册
-                    RunLocalizationPatch();
-                }
+                //if (IsAssemblyLoaded("Assembly-CSharp"))
+                //{
+                //    // Doorstop 晚启动错过加载事件时的兜底：Assembly-CSharp 已加载则直接注册
+                //    RunLocalizationPatch();
+                //}
             }
             catch (Exception ex)
             {
@@ -185,17 +188,27 @@ namespace DlcUnlockPatcher
             yield return baseDir;
         }
 
-        private static string GetMatchId()
+        private static string[] GetMatchId()
         {
             var env = Environment.GetEnvironmentVariable("DLC_PATCHER_MATCH_ID");
             if (!string.IsNullOrEmpty(env))
             {
-                return env;
+                return env.Split(',')
+                  .Select(x => x.Trim())
+                  .Where(x => x != "")
+                  .ToArray();
             }
             var ini = LoadProxyIni();
-            return ini.TryGetValue("match_id", out var value) && !string.IsNullOrEmpty(value)
-                ? value
-                : "COSMETIC1_ID";
+
+            if (ini.TryGetValue("match_id", out var value) && !string.IsNullOrEmpty(value))
+            {
+                return value.Split(',')
+                    .Select(x => x.Trim())
+                    .Where(x => x != "")
+                    .ToArray();
+            }
+
+            return Patches.DlcIds;
         }
 
         private static Dictionary<string, string> LoadProxyIni()
@@ -273,6 +286,7 @@ namespace Doorstop
     {
         public static void Start()
         {
+
             DlcUnlockPatcher.Entry.Start();
         }
     }

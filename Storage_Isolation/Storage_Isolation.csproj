@@ -2,6 +2,8 @@
 	<PropertyGroup>
 		<Title>储物隔绝</Title>
 		<Description>所有建筑内部的储物箱与外界环境隔绝.</Description>
+		<minimumSupportedBuild>719533</minimumSupportedBuild>
+
 		<UsesPLib>false</UsesPLib>
 		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
 		<Nullable>enable</Nullable>
