@@ -557,7 +557,7 @@ namespace SelectLastCarePackage.CarePackagePanel
         {
             if (ElementLoader.FindElementByName(info.id) != null)
             {
-                return string.Format(UI.IMMIGRANTSCREEN.CARE_PACKAGE_ELEMENT_COUNT_ONLY, GameUtil.GetFormattedMass(info.quantity, GameUtil.TimeSlice.None, GameUtil.MetricMassFormat.UseThreshold, true, "{0:0.#}"));
+                return string.Format(UI.IMMIGRANTSCREEN.CARE_PACKAGE_ELEMENT_COUNT_ONLY, GameUtil.GetFormattedMass(info.quantity, GameUtil.TimeSlice.None, GameUtil.MetricMassFormat.UseThreshold, true, "0.#"));
             }
             EdiblesManager.FoodInfo foodInfo = EdiblesManager.GetFoodInfo(info.id);
             if (foodInfo != null && foodInfo.CaloriesPerUnit > 0f)
