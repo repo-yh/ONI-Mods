@@ -48,7 +48,7 @@ namespace DlcUnlockPatcher
                     LogEnabled = false;
                 }
                 LogDoorstopEnv();
-                Log("entry, match_id=" + Patches.MatchId);
+                Log($"entry, match_id=[{string.Join(" | ", Patches.MatchId)}]");
                 _harmony = new Harmony("dlc.unlock.patcher");
                 _harmony.PatchAll(typeof(Patches).Assembly);
                 Log("patched");
