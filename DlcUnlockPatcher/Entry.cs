@@ -1,8 +1,9 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 
 namespace DlcUnlockPatcher
 {
@@ -187,17 +188,27 @@ namespace DlcUnlockPatcher
             yield return baseDir;
         }
 
-        private static string GetMatchId()
+        private static string[] GetMatchId()
         {
             var env = Environment.GetEnvironmentVariable("DLC_PATCHER_MATCH_ID");
             if (!string.IsNullOrEmpty(env))
             {
-                return env;
+                return env.Split(',')
+                  .Select(x => x.Trim())
+                  .Where(x => x != "")
+                  .ToArray();
             }
             var ini = LoadProxyIni();
-            return ini.TryGetValue("match_id", out var value) && !string.IsNullOrEmpty(value)
-                ? value
-                : "COSMETIC1_ID";
+
+            if (ini.TryGetValue("match_id", out var value) && !string.IsNullOrEmpty(value))
+            {
+                return value.Split(',')
+                    .Select(x => x.Trim())
+                    .Where(x => x != "")
+                    .ToArray();
+            }
+
+            return Patches.DlcIds;
         }
 
         private static Dictionary<string, string> LoadProxyIni()

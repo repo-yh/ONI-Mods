@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DlcUnlockPatcher
 {
@@ -12,7 +13,7 @@ namespace DlcUnlockPatcher
 		[HarmonyPatch(typeof(DlcManager), "IsContentSubscribed")]
 		public static bool PreIsContentSubscribed(string dlcId, ref bool __result,ref  Dictionary<string, bool>  ___dlcSubscribedCache)
 		{
-			if (dlcId != Patches.MatchId)
+			if (!Patches.MatchId.Contains(dlcId))
 			{
 				return true;
 			}
@@ -25,7 +26,7 @@ namespace DlcUnlockPatcher
 		[HarmonyPatch(typeof(DlcManager), "IsContentOwned")]
 		public static bool PreIsContentOwned(string dlcId, ref bool __result, ref Dictionary<string, bool> ___dlcPurchasedCache)
 		{
-			if (dlcId != Patches.MatchId)
+			if (!Patches.MatchId.Contains(dlcId))
 			{
 				return true;
 			}
@@ -34,7 +35,9 @@ namespace DlcUnlockPatcher
 			return false;
 		}
 
-		public static string MatchId = "COSMETIC1_ID";
+        public static readonly string[] DlcIds = ["COSMETIC1_ID", "COSMETIC2_ID"];
+
+        public static string[] MatchId = ["COSMETIC1_ID", "COSMETIC2_ID"];
 
 		static Traverse CheckForDLCFileInstallation = Traverse.Create(typeof(DlcManager)).Method("CheckForDLCFileInstallation", new Type[] { typeof(string) });
 
