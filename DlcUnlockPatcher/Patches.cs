@@ -35,9 +35,9 @@ namespace DlcUnlockPatcher
 			return false;
 		}
 
-        public static readonly string[] DlcIds = ["COSMETIC1_ID", "COSMETIC2_ID"];
+        public static readonly string[] DlcIds = [DlcManager.COSMETIC1_ID, DlcManager.COSMETIC2_ID];
 
-        public static string[] MatchId = ["COSMETIC1_ID", "COSMETIC2_ID"];
+        public static string[] MatchId = [DlcManager.COSMETIC1_ID, DlcManager.COSMETIC2_ID];
 
 		static Traverse CheckForDLCFileInstallation = Traverse.Create(typeof(DlcManager)).Method("CheckForDLCFileInstallation", new Type[] { typeof(string) });
 
