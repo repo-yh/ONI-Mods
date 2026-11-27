@@ -86,7 +86,7 @@ namespace GeoTuner_mod
          
             base.OnPrefabInit();
 
-            base.Subscribe<GeoTunerAdjustable>(-905833192, GeoTunerAdjustable.OnCopySettingsDelegate);
+            this.copySettingsHandle = base.Subscribe(-905833192, GeoTunerAdjustable.OnCopySettingsHandler, this);
         }
 
 
@@ -105,7 +105,7 @@ namespace GeoTuner_mod
             {
                 this.energyConsumer.BaseWattageRating = BaseWattageRating;
             }
-            base.Unsubscribe<GeoTunerAdjustable>(-905833192, GeoTunerAdjustable.OnCopySettingsDelegate,false);
+            base.Unsubscribe(ref this.copySettingsHandle);
             base.OnCleanUp();
         }
 
@@ -163,8 +163,12 @@ namespace GeoTuner_mod
 
 
 
-        private static readonly EventSystem.IntraObjectHandler<GeoTunerAdjustable> OnCopySettingsDelegate = new EventSystem.IntraObjectHandler<GeoTunerAdjustable>(new Action<GeoTunerAdjustable, object>(GeoTunerAdjustable.OnCopySettings));
+        private static void OnCopySettingsHandler(object context, object data)
+        {
+            GeoTunerAdjustable.OnCopySettings((GeoTunerAdjustable)context, data);
+        }
 
+        private int copySettingsHandle = -1;
 
         private  const float BaseWattageRating = 120f;
 
