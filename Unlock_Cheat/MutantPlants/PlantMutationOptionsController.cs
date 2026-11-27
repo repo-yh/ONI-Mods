@@ -20,31 +20,35 @@ namespace Unlock_Cheat.MutantPlants
             {
                 return;
             }
+            selectedOptionTag = Tag.Invalid;
             base.Trigger(1980521255, null);
         }
 
-        private static readonly EventSystem.IntraObjectHandler<PlantMutationOptionsController> OnSelectChangedHandler =
-            new EventSystem.IntraObjectHandler<PlantMutationOptionsController>((component, data) => component.OnSelectChanged(data));
+        private int OnSelectChangedHandler = -1;
 
         public override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            Subscribe(-1503271301, OnSelectChangedHandler);
+            OnSelectChangedHandler = Subscribe(-1503271301, PlantMutationOptionsController.OnSelectChanged, this);
         }
 
         public override void OnCleanUp()
         {
-            Unsubscribe(-1503271301, OnSelectChangedHandler, false);
+            Unsubscribe(ref OnSelectChangedHandler);
             base.OnCleanUp();
         }
 
-        private void OnSelectChanged(object data)
+        private static void OnSelectChanged(object target ,object data)
         {
-            if (!(data is Boxed<bool> boxed) || boxed.value || !this.IsPanelOpen)
+            if (target is PlantMutationOptionsController instance)
             {
-                return;
+
+                if (!(data is Boxed<bool> boxed) || boxed.value || !instance.IsPanelOpen)
+                {
+                    return;
+                }
+                instance.IsPanelOpen = false;
             }
-            this.IsPanelOpen = false;
         }
 
         // 备选方案（未启用）：ISim1000ms 每秒轮询替代事件订阅自动关面板。

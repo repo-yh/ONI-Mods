@@ -36,7 +36,6 @@ namespace Unlock_Cheat.Harvest
             }
         }
 
-
         public bool IsDispensing
         {
             get
@@ -54,8 +53,8 @@ namespace Unlock_Cheat.Harvest
         {
             base.OnSpawn();
             this.utilityCell = this.GetOutputCell();
-            ScenePartitionerLayer layer = GameScenePartitioner.Instance.objectLayers[20];
-            this.partitionerEntry = GameScenePartitioner.Instance.Add("SolidConduitConsumer.OnSpawn", base.gameObject, this.utilityCell, layer, new Action<object>(this.OnConduitConnectionChanged));
+            ScenePartitionerLayer scenePartitionerLayer = GameScenePartitioner.Instance.objectLayers[20];
+            this.partitionerEntry = GameScenePartitioner.Instance.Add_obsolete("SolidConduitConsumer.OnSpawn", base.gameObject, this.utilityCell, scenePartitionerLayer, new Action<object>(this.OnConduitConnectionChanged));
             this.GetConduitFlow().AddConduitUpdater(new Action<float>(this.ConduitUpdate), ConduitFlowPriority.Dispense);
             this.OnConduitConnectionChanged(null);
         }
@@ -69,7 +68,7 @@ namespace Unlock_Cheat.Harvest
 
         private void OnConduitConnectionChanged(object data)
         {
-            this.dispensing = (this.dispensing && this.IsConnected);
+            this.dispensing = this.dispensing && this.IsConnected;
             base.Trigger(-2094018600, BoxedBools.Box(this.IsConnected));
         }
 
@@ -149,19 +148,17 @@ namespace Unlock_Cheat.Harvest
             }
         }
 
-
         private int GetConnectedNetworkID()
         {
             GameObject gameObject = Grid.Objects[this.utilityCell, 20];
-            SolidConduit solidConduit = (gameObject != null) ? gameObject.GetComponent<SolidConduit>() : null;
-            UtilityNetwork utilityNetwork = (solidConduit != null) ? solidConduit.GetNetwork() : null;
+            SolidConduit solidConduit = ((gameObject != null) ? gameObject.GetComponent<SolidConduit>() : null);
+            UtilityNetwork utilityNetwork = ((solidConduit != null) ? solidConduit.GetNetwork() : null);
             if (utilityNetwork == null)
             {
                 return -1;
             }
             return utilityNetwork.id;
         }
-
 
         private int GetOutputCell()
         {

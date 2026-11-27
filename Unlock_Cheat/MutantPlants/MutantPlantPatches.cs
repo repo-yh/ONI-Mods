@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using Klei.AI;
 using PeterHan.PLib.Options;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Unlock_Cheat.MutantPlants
@@ -18,7 +20,7 @@ namespace Unlock_Cheat.MutantPlants
                     (kprefabID.HasTag(GameTags.MutatedSeed)  && (SingletonOptions<Options>.Instance.MutantPlant_Mult  )))
                 {
 
-                    PlantMutationOptionsController panel = mutant.GetComponent<PlantMutationOptionsController>();
+                    PlantMutationOptionsController panel = mutant.FindOrAddComponent<PlantMutationOptionsController>();
                     if (panel != null)
                     {
                         bool isOpen = panel.IsPanelOpen;
@@ -67,24 +69,27 @@ isOpen ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP : Languages.UI.US
                 }
             }
         }
-
-        private static readonly EventSystem.IntraObjectHandler<MutantPlant> OnRefreshUserMenuDelegate = new EventSystem.IntraObjectHandler<MutantPlant>(delegate (MutantPlant component, object data)
+        public static Dictionary<object, int[]> Handlers = new Dictionary<object, int[]>();
+        private static readonly Action<object, object> OnCopySettingsDelegate = delegate (object component, object data)
         {
-            MutantPlantPatches.OnRefreshUserMenu(component);
-        });
+            MutantPlantPatches.OnCopySettings((MutantPlant)component, data);
 
-        private static readonly EventSystem.IntraObjectHandler<MutantPlant> OnCopySettingsDelegate = new EventSystem.IntraObjectHandler<MutantPlant>(delegate (MutantPlant component, object data)
+        };
+
+        private static readonly Action<object, object> OnRefreshUserMenuDelegate = delegate (object component, object data)
         {
-            MutantPlantPatches.OnCopySettings(component,data);
-        });
+            MutantPlantPatches.OnRefreshUserMenu((MutantPlant)component);
+        };
 
         [HarmonyPatch(typeof(MutantPlant), "OnPrefabInit")]
         public static class MutantPlant_OnSpawn
         {
+
             public static void Postfix(MutantPlant __instance)
             {
-                __instance.Subscribe<MutantPlant>(493375141, MutantPlantPatches.OnRefreshUserMenuDelegate);
-                __instance.Subscribe<MutantPlant>(-905833192, MutantPlantPatches.OnCopySettingsDelegate);
+                int h1 = __instance.Subscribe(493375141, MutantPlantPatches.OnRefreshUserMenuDelegate, __instance);
+                int h2 = __instance.Subscribe(-905833192, MutantPlantPatches.OnCopySettingsDelegate, __instance);
+                Handlers[__instance]= [h1,h2];
             }
         }
 
@@ -93,12 +98,18 @@ isOpen ? Languages.UI.USERMENUACTIONS.MUTATORMENU.CLOSETOOLTIP : Languages.UI.US
         {
             public static void Prefix(MutantPlant __instance)
             {
-                __instance.Unsubscribe<MutantPlant>(493375141, MutantPlantPatches.OnRefreshUserMenuDelegate, false);
-                __instance.Unsubscribe<MutantPlant>(-905833192, MutantPlantPatches.OnCopySettingsDelegate, false);
+                int[] val = null;
 
+                if (Handlers.TryGetValue(__instance,out val))
+                {
+                    foreach (var item in val)
+                    {
+                        __instance.Unsubscribe(item);
+                    }
+                    Handlers.Remove(__instance);
+                }
             }
         }
-
 
 
         [HarmonyPatch(typeof(PlantMutation), "ApplyFunctionalTo")]

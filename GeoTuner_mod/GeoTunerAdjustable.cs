@@ -2,11 +2,8 @@
 using KSerialization;
 using PeterHan.PLib.Options;
 using System;
-using System.Collections.Generic;
-
 using UnityEngine;
 
-using static UnityEngine.UI.Image;
 
 namespace GeoTuner_mod
 {
@@ -17,10 +14,6 @@ namespace GeoTuner_mod
 
         private static Options option = SingletonOptions<Options>.Instance;
 
-        private static void OnCopySettings(GeoTunerAdjustable comp, object data)
-        {
-            comp.OnCopySettings(data);
-        }
 
         public float UserMaxCapacity
         {
@@ -109,17 +102,17 @@ namespace GeoTuner_mod
             base.OnCleanUp();
         }
 
-        internal void OnCopySettings(object data)
+        private static void OnCopySettings(GeoTunerAdjustable comp, object data)
         {
             GeoTunerAdjustable component = ((GameObject)data).GetComponent<GeoTunerAdjustable>();
             bool flag = component != null;
             if (flag)
             {
-                this.MAX_GEOTUNED = component.MAX_GEOTUNED;
+                comp.MAX_GEOTUNED = component.MAX_GEOTUNED;
             }
         }
 
-    
+
         internal void Update()
         {
 

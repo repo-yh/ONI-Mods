@@ -85,28 +85,28 @@ namespace NuclearResearch
         public override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            base.Subscribe<NuclearResearchCenter_SideScreen>(-905833192, NuclearResearchCenter_SideScreen.OnCopySettingsDelegate);
+            copySettingsHandle = base.Subscribe(-905833192, NuclearResearchCenter_SideScreen.OnCopySettingsHandler, this);
+
         }
 
         public override void OnCleanUp()
         {
-            base.Unsubscribe<NuclearResearchCenter_SideScreen>(-905833192, NuclearResearchCenter_SideScreen.OnCopySettingsDelegate, false);
+            base.Unsubscribe(ref copySettingsHandle);
             base.OnCleanUp();
         }
-        private void OnCopySettings(object data)
+
+        private int copySettingsHandle = -1;
+        private static void OnCopySettingsHandler(object context, object data)
         {
-            NuclearResearchCenter_SideScreen component = ((GameObject)data).GetComponent<NuclearResearchCenter_SideScreen>();
-            if (component != null)
+            if(context is NuclearResearchCenter_SideScreen instance)
             {
-               storage.capacity = component.storage.capacity;
+                NuclearResearchCenter_SideScreen component = ((GameObject)data).GetComponent<NuclearResearchCenter_SideScreen>();
+                if (component != null)
+                {
+                    instance.storage.capacity = component.storage.capacity;
+                }
             }
         }
-
-
-        private static readonly EventSystem.IntraObjectHandler<NuclearResearchCenter_SideScreen> OnCopySettingsDelegate = new EventSystem.IntraObjectHandler<NuclearResearchCenter_SideScreen>(delegate (NuclearResearchCenter_SideScreen component, object data)
-        {
-            component.OnCopySettings(data);
-        });
 
 #pragma warning disable CS0649, CS0169,CS8618 // 禁用 "从未赋值" 警告
         [HideInInspector]
