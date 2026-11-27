@@ -99,11 +99,5 @@
 
   </PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-		<!-- Choose the correct version to reduce log spam w.r.t. mismatched assembly versions -->
-		<Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-			<SpecificVersion>True</SpecificVersion>
-		</Reference>
-	</ItemGroup>
 
 </Project>
