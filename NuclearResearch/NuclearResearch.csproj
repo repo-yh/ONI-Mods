@@ -3,7 +3,6 @@
   <PropertyGroup>
 	  <Title>大容量材料研究终端</Title>
 	  <Description>可以存储大量的辐射粒子,用于研究.</Description>
-	  <minimumSupportedBuild>707956</minimumSupportedBuild>
 
 	  <UsesPLib>false</UsesPLib>
 	  <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
